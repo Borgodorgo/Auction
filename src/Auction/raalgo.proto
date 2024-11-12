@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option go_package = "/raalgo";
+
+package raalgo;
+
+message Amount {
+    int64 amount = 1;
+}
+
+message Ack {
+    Boolean ack = 1;
+}
+
+// Service definition for ChittyChat
+service P2Pnetwork {
+    rpc Bid(Amount) returns (Ack);
+    rpc Result() returns (Amount);
+}
