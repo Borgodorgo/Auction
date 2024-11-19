@@ -31,7 +31,7 @@ const (
 // Auction
 type AuctionClient interface {
 	Bid(ctx context.Context, in *Amount, opts ...grpc.CallOption) (*Ack, error)
-	Result(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Amount, error)
+	Result(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Update, error)
 }
 
 type auctionClient struct {
@@ -52,9 +52,9 @@ func (c *auctionClient) Bid(ctx context.Context, in *Amount, opts ...grpc.CallOp
 	return out, nil
 }
 
-func (c *auctionClient) Result(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Amount, error) {
+func (c *auctionClient) Result(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Update, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Amount)
+	out := new(Update)
 	err := c.cc.Invoke(ctx, Auction_Result_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func (c *auctionClient) Result(ctx context.Context, in *emptypb.Empty, opts ...g
 // Auction
 type AuctionServer interface {
 	Bid(context.Context, *Amount) (*Ack, error)
-	Result(context.Context, *emptypb.Empty) (*Amount, error)
+	Result(context.Context, *emptypb.Empty) (*Update, error)
 	mustEmbedUnimplementedAuctionServer()
 }
 
@@ -83,7 +83,7 @@ type UnimplementedAuctionServer struct{}
 func (UnimplementedAuctionServer) Bid(context.Context, *Amount) (*Ack, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Bid not implemented")
 }
-func (UnimplementedAuctionServer) Result(context.Context, *emptypb.Empty) (*Amount, error) {
+func (UnimplementedAuctionServer) Result(context.Context, *emptypb.Empty) (*Update, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Result not implemented")
 }
 func (UnimplementedAuctionServer) mustEmbedUnimplementedAuctionServer() {}

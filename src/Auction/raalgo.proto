@@ -16,8 +16,12 @@ message Ack {
     int64 id = 2;
 }
 
+message Update {
+    int64 amount = 1;
+}
+
 // Auction
 service Auction {
     rpc Bid(Amount) returns (Ack);
-    rpc Result(google.protobuf.Empty) returns (int64);
+    rpc Result(google.protobuf.Empty) returns (Update);
 }
