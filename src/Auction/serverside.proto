@@ -29,6 +29,6 @@ message Response {
 // P2PNetwork
 service P2PNetwork {
     rpc Bid(Amount) returns (Ack);
-    rpc UpdateValue(Bid) returns (Ack);
+    rpc Update(Amount) returns (Ack);
 	rpc ElectionMessages(Request) returns (Response);
 }

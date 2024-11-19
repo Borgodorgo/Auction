@@ -19,5 +19,5 @@ message Ack {
 // Auction
 service Auction {
     rpc Bid(Amount) returns (Ack);
-    rpc Result(google.protobuf.Empty) returns (Amount);
+    rpc Result(google.protobuf.Empty) returns (int64);
 }
