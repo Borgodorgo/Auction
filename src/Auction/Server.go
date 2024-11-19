@@ -90,3 +90,18 @@ func (n *P2PNode) Update(ctx context.Context, update *sv.Amount) (ack *sv.Respon
 func Election() {
 	//Election code
 }
+
+func startServer(node *P2PNode, address string) {
+	lis, err := net.Listen("tcp", address)
+	if err != nil {
+		log.Fatalf("Failed to listen: %v", err)
+	}
+
+	grpcServer := grpc.NewServer()
+	pb.RegisterAuctionServer(grpcServer, node)
+
+	log.Printf("P2P node is running on port %s/n", address)
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("Failed to serve: %v", err)
+	}
+}
