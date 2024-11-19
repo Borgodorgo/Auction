@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-
 option go_package = "github.com/raalgo/Auction/raalgo";
 
 package raalgo;
@@ -9,6 +7,7 @@ package raalgo;
 message Amount {
     int64 amount = 1;
     int64 id = 2;
+    int64 timestamp = 3;
 }
 
 message Ack {
@@ -16,12 +15,18 @@ message Ack {
     int64 id = 2;
 }
 
-message Update {
+message Request {
     int64 amount = 1;
+    int64 timestamp = 2;
 }
 
-// Auction
-service Auction {
+message Response {
+    bool ack = 1;
+}
+
+// P2PNetwork
+service P2PNetwork {
     rpc Bid(Amount) returns (Ack);
-    rpc Result(google.protobuf.Empty) returns (Update);
+    rpc Update(Amount) returns (Response);
+	rpc ElectionMessages(Request) returns (Response);
 }
