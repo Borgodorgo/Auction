@@ -25,7 +25,7 @@ type P2PNode struct {
 	peerPorts         []string
 }
 
-func (n *P2PNode) Bid(ctx context.Context, bid *pb.Amount, err error) (ack *pb.Ack) {
+func (n *P2PNode) Bid(ctx context.Context, bid *pb.Amount) (ack *pb.Ack, err error) {
 	if !n.IsLeader {
 		ack, _ := n.leader.Bid(ctx, &sv.Amount{
 			Amount: bid.Amount,
@@ -35,7 +35,7 @@ func (n *P2PNode) Bid(ctx context.Context, bid *pb.Amount, err error) (ack *pb.A
 		return &pb.Ack{
 			Ack: ack.Ack,
 			Id:  ack.Id,
-		}
+		}, nil
 	}
 	//if (!leader) {return response from leader}
 	if bid.Amount > n.Highest_Bid {
@@ -46,12 +46,12 @@ func (n *P2PNode) Bid(ctx context.Context, bid *pb.Amount, err error) (ack *pb.A
 		return &pb.Ack{
 			Ack: true,
 			Id:  n.Highest_BidId,
-		}
+		}, nil
 	}
 	return &pb.Ack{
 		Ack: false,
 		Id:  n.Highest_BidId,
-	}
+	}, nil
 }
 
 func (n *P2PNode) result() (outcome int64) {
@@ -101,7 +101,16 @@ func startServer(node *P2PNode, address string) {
 	pb.RegisterAuctionServer(grpcServer, node)
 
 	log.Printf("P2P node is running on port %s/n", address)
+
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
+
+	if len(node.peers) == 0 {
+		//set node leader to be the leader
+		node.IsLeader = true
+	}
+
+	//put the node into the peers map
+
 }
