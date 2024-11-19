@@ -25,7 +25,7 @@ type P2PNode struct {
 	peerPorts         []string
 }
 
-func (n *P2PNode) Bid(ctx context.Context, bid *pb.Amount) *raalgo.Ack {
+func (n *P2PNode) Bid(ctx context.Context, bid *pb.Amount, err error) (ack *pb.Ack) {
 	if !n.IsLeader {
 		ack, _ := n.leader.Bid(ctx, &sv.Amount{
 			Amount: bid.Amount,
