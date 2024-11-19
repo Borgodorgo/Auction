@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-
 option go_package = "github.com/raalgo/Auction/raalgo";
 
 package raalgo;
@@ -29,6 +27,6 @@ message Response {
 // P2PNetwork
 service P2PNetwork {
     rpc Bid(Amount) returns (Ack);
-    rpc Update(Amount) returns (Ack);
+    rpc Update(Amount) returns (Response);
 	rpc ElectionMessages(Request) returns (Response);
 }

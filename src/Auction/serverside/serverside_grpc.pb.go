@@ -31,7 +31,7 @@ const (
 // P2PNetwork
 type P2PNetworkClient interface {
 	Bid(ctx context.Context, in *Amount, opts ...grpc.CallOption) (*Ack, error)
-	Update(ctx context.Context, in *Amount, opts ...grpc.CallOption) (*Ack, error)
+	Update(ctx context.Context, in *Amount, opts ...grpc.CallOption) (*Response, error)
 	ElectionMessages(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -53,9 +53,9 @@ func (c *p2PNetworkClient) Bid(ctx context.Context, in *Amount, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *p2PNetworkClient) Update(ctx context.Context, in *Amount, opts ...grpc.CallOption) (*Ack, error) {
+func (c *p2PNetworkClient) Update(ctx context.Context, in *Amount, opts ...grpc.CallOption) (*Response, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Ack)
+	out := new(Response)
 	err := c.cc.Invoke(ctx, P2PNetwork_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (c *p2PNetworkClient) ElectionMessages(ctx context.Context, in *Request, op
 // P2PNetwork
 type P2PNetworkServer interface {
 	Bid(context.Context, *Amount) (*Ack, error)
-	Update(context.Context, *Amount) (*Ack, error)
+	Update(context.Context, *Amount) (*Response, error)
 	ElectionMessages(context.Context, *Request) (*Response, error)
 	mustEmbedUnimplementedP2PNetworkServer()
 }
@@ -95,7 +95,7 @@ type UnimplementedP2PNetworkServer struct{}
 func (UnimplementedP2PNetworkServer) Bid(context.Context, *Amount) (*Ack, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Bid not implemented")
 }
-func (UnimplementedP2PNetworkServer) Update(context.Context, *Amount) (*Ack, error) {
+func (UnimplementedP2PNetworkServer) Update(context.Context, *Amount) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedP2PNetworkServer) ElectionMessages(context.Context, *Request) (*Response, error) {
