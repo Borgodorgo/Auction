@@ -9,6 +9,7 @@ package raalgo;
 message Amount {
     int64 amount = 1;
     int64 id = 2;
+    int64 timestamp = 3;
 }
 
 message Ack {
@@ -16,8 +17,18 @@ message Ack {
     int64 id = 2;
 }
 
-// Auction
-service Auction {
+message Request {
+    int64 amount = 1;
+    int64 timestamp = 2;
+}
+
+message Response {
+    bool ack = 1;
+}
+
+// P2PNetwork
+service P2PNetwork {
     rpc Bid(Amount) returns (Ack);
-    rpc Result(google.protobuf.Empty) returns (Amount);
+    rpc UpdateValue(Bid) returns (Ack);
+	rpc ElectionMessages(Request) returns (Response);
 }
