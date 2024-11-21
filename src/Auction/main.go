@@ -40,17 +40,26 @@ import "time"
 	}
 */
 func main() {
-
 	node1 := CreateNode()
 	node2 := CreateNode()
 	node3 := CreateNode()
 	node4 := CreateNode()
 	node5 := CreateNode()
-	go startServer(node1, ":5001")
-	go startServer(node2, ":5002")
-	go startServer(node3, ":5003")
-	go startServer(node4, ":5004")
-	go startServer(node5, ":5005")
+	go startServer(node1, ":5001", true)
+	go startServer(node2, ":5002", false)
+	go startServer(node3, ":5003", false)
+	go startServer(node4, ":5004", false)
+	go startServer(node5, ":5005", false)
+
 	time.Sleep(3 * time.Second)
-	start()
+	for i := 0; i < 5; i++ {
+		go start()
+	}
+
+	time.Sleep(3 * time.Second)
+	go node1.Crash()
+	for {
+		time.Sleep(time.Second)
+	}
+
 }
