@@ -23,4 +23,5 @@ message Response {
 service ReplicationService {
     rpc ReplicateBid(NewBid) returns (Response);
     rpc ConfirmLeader(NewLeader) returns (Response);
+    rpc PropagateToLeader(NewBid) returns (Response);
 }

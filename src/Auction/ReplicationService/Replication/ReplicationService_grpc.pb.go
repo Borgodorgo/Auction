@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ReplicationService_ReplicateBid_FullMethodName  = "/replicationservice.ReplicationService/ReplicateBid"
-	ReplicationService_ConfirmLeader_FullMethodName = "/replicationservice.ReplicationService/ConfirmLeader"
+	ReplicationService_ReplicateBid_FullMethodName      = "/replicationservice.ReplicationService/ReplicateBid"
+	ReplicationService_ConfirmLeader_FullMethodName     = "/replicationservice.ReplicationService/ConfirmLeader"
+	ReplicationService_PropagateToLeader_FullMethodName = "/replicationservice.ReplicationService/PropagateToLeader"
 )
 
 // ReplicationServiceClient is the client API for ReplicationService service.
@@ -31,6 +32,7 @@ const (
 type ReplicationServiceClient interface {
 	ReplicateBid(ctx context.Context, in *NewBid, opts ...grpc.CallOption) (*Response, error)
 	ConfirmLeader(ctx context.Context, in *NewLeader, opts ...grpc.CallOption) (*Response, error)
+	PropagateToLeader(ctx context.Context, in *NewBid, opts ...grpc.CallOption) (*Response, error)
 }
 
 type replicationServiceClient struct {
@@ -61,6 +63,16 @@ func (c *replicationServiceClient) ConfirmLeader(ctx context.Context, in *NewLea
 	return out, nil
 }
 
+func (c *replicationServiceClient) PropagateToLeader(ctx context.Context, in *NewBid, opts ...grpc.CallOption) (*Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Response)
+	err := c.cc.Invoke(ctx, ReplicationService_PropagateToLeader_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ReplicationServiceServer is the server API for ReplicationService service.
 // All implementations must embed UnimplementedReplicationServiceServer
 // for forward compatibility.
@@ -69,6 +81,7 @@ func (c *replicationServiceClient) ConfirmLeader(ctx context.Context, in *NewLea
 type ReplicationServiceServer interface {
 	ReplicateBid(context.Context, *NewBid) (*Response, error)
 	ConfirmLeader(context.Context, *NewLeader) (*Response, error)
+	PropagateToLeader(context.Context, *NewBid) (*Response, error)
 	mustEmbedUnimplementedReplicationServiceServer()
 }
 
@@ -84,6 +97,9 @@ func (UnimplementedReplicationServiceServer) ReplicateBid(context.Context, *NewB
 }
 func (UnimplementedReplicationServiceServer) ConfirmLeader(context.Context, *NewLeader) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmLeader not implemented")
+}
+func (UnimplementedReplicationServiceServer) PropagateToLeader(context.Context, *NewBid) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PropagateToLeader not implemented")
 }
 func (UnimplementedReplicationServiceServer) mustEmbedUnimplementedReplicationServiceServer() {}
 func (UnimplementedReplicationServiceServer) testEmbeddedByValue()                            {}
@@ -142,6 +158,24 @@ func _ReplicationService_ConfirmLeader_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReplicationService_PropagateToLeader_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewBid)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReplicationServiceServer).PropagateToLeader(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReplicationService_PropagateToLeader_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReplicationServiceServer).PropagateToLeader(ctx, req.(*NewBid))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ReplicationService_ServiceDesc is the grpc.ServiceDesc for ReplicationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -156,6 +190,10 @@ var ReplicationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ConfirmLeader",
 			Handler:    _ReplicationService_ConfirmLeader_Handler,
+		},
+		{
+			MethodName: "PropagateToLeader",
+			Handler:    _ReplicationService_PropagateToLeader_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

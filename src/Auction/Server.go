@@ -16,9 +16,9 @@ type P2PNode struct {
 	rs.UnimplementedReplicationServiceServer
 	peers             map[string]rs.ReplicationServiceClient // map of peer addresses to clients
 	peerLock          sync.RWMutex
-	leader            rs.ReplicationServiceClient
+	leader            rs.ReplicationServiceServer
 	Highest_Bid       int64
-	Highest_BidId     int64
+	Highest_BidderId  int64
 	Our_Timestamp     int64
 	Highest_Timestamp int64
 	IsLeader          bool
@@ -31,7 +31,7 @@ type P2PNode struct {
 //If leader, it updates the highest bid and propagates the bid to followers
 func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err error) {
 	if !n.IsLeader {
-		response, _ := n.leader.ReplicateBid(ctx, &rs.NewBid{
+		response, _ := n.leader.PropagateToLeader(ctx, &rs.NewBid{
 			Amount: bid.Amount,
 			Bidderid:     bid.Bidderid,
 		})
@@ -55,24 +55,25 @@ func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err err
 	}, nil
 }
 
-func (n *P2PNode) ConfirmLeader(NewLeader rs.NewLeader) {
-
-}
-
-func (n *P2PNode) result() (outcome int64) {
-	//return highest value
-	return n.Highest_Bid
+func (n *P2PNode) PropagateToLeader(ctx context.Context, bid *rs.NewBid) (ack *rs.Response, err error) {
+	response := n.ReplicateBid(ctx, bid)
+	return &rs.Response{
+		Ack: response.Ack,
+		Bidderid:  response.Bidderid,
+	}, nil
 }
 
 func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response) {
 	if bid.Amount > n.Highest_Bid {
-		n.UpdateFollowers(bid)
 		n.Highest_Bid = bid.Amount
-		n.Highest_BidId = bid.Bidderid
 		n.Highest_Timestamp = n.Highest_Timestamp + 1
+		n.UpdateFollowers(bid)
+		if bid.Bidderid == 0 {
+			n.Highest_BidderId++
+		}
 		return &rs.Response{
 			Ack: true,
-			Bidderid:  bid.Bidderid, //ADD CHECK TO SEE IF ID IS 0
+			Bidderid:  n.Highest_BidderId,
 		}
 	}
 	return &rs.Response{
@@ -98,6 +99,17 @@ func (n *P2PNode) UpdateFollowers(update *pb.Amount) {
 	}
 	n.peerLock.RUnlock()
 }
+
+func (n *P2PNode) ConfirmLeader(NewLeader rs.NewLeader) {
+
+}
+
+func (n *P2PNode) result() (outcome int64) {
+	//return highest value
+	return n.Highest_Bid
+}
+
+
 
 func (n *P2PNode) Update(ctx context.Context, update *sv.Amount) (ack *sv.Response) {
 	//Call from leader to update value
