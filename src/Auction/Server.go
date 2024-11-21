@@ -17,9 +17,9 @@ type P2PNode struct {
 	rs.UnimplementedReplicationServiceServer
 	peers             map[string]rs.ReplicationServiceClient // map of peer addresses to clients
 	peerLock          sync.RWMutex
-	leader            rs.ReplicationServiceClient
+	leader            rs.ReplicationServiceServer
 	Highest_Bid       int64
-	Highest_BidId     int64
+	Highest_BidderId  int64
 	Our_Timestamp     int64
 	Highest_Timestamp int64
 	IsLeader          bool
@@ -31,32 +31,37 @@ type P2PNode struct {
 // If leader, it updates the highest bid and propagates the bid to followers
 func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err error) {
 	if !n.IsLeader {
-		response, _ := n.leader.ReplicateBid(ctx, &rs.NewBid{
-			Amount:   bid.Amount,
-			Bidderid: bid.Bidderid,
+		response, _ := n.leader.PropagateToLeader(ctx, &rs.NewBid{
+			Amount: bid.Amount,
+			Bidderid:     bid.Bidderid,
 		})
 
-		if response.Ack {
-			return &as.Ack{
-				Ack:      response.Ack,
-				Bidderid: response.Bidderid,
-			}, nil
-		}
+		return &as.Ack{
+			Ack: response.Ack,
+			Bidderid:  response.Bidderid,
+		}, nil
 	}
 
-	response := n.ReplicateBid(ctx, &rs.NewBid{
-		Amount:   bid.Amount,
-		Bidderid: bid.Bidderid,
-	})
+	if CheckBidValidity(bid) {
+		bid = n.UpdateBidAsLeader(bid)
+		n.UpdateFollowers(bid)
+		return &as.Ack{
+			Ack: true,
+			Bidderid: bid.Bidderid,
+		}, nil
+	}
 
 	return &as.Ack{
-		Ack:      response.Ack,
-		Bidderid: response.Bidderid,
+		Ack: false,
+		Bidderid:  bid.Bidderid,
 	}, nil
 }
 
-func (n *P2PNode) ConfirmLeader(NewLeader rs.NewLeader) {
-
+func CheckBidValidity (bid *rs.NewBid) (valid bool) {
+	if bid.Amount > n.Highest_Bid {
+		return true
+	}
+	return false
 }
 
 func (n *P2PNode) Result(ctx context.Context, empty *emptypb.Empty) (result *as.Outcome, err error) {
@@ -64,49 +69,79 @@ func (n *P2PNode) Result(ctx context.Context, empty *emptypb.Empty) (result *as.
 		Amount: n.Highest_Bid,
 	}, err
 }
-func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response) {
-	if bid.Amount > n.Highest_Bid {
-		n.UpdateFollowers(bid)
-		n.Highest_Bid = bid.Amount
-		n.Highest_BidId = bid.Bidderid
-		n.Highest_Timestamp = n.Highest_Timestamp + 1
-		return &rs.Response{
-			Ack:      true,
-			Bidderid: bid.Bidderid, //ADD CHECK TO SEE IF ID IS 0
-		}
+
+
+func (n *P2PNode) UpdateBidAsLeader(bid *rs.NewBid) (bid *rs.NewBid) {
+	n.Highest_Bid = bid.Amount
+	n.Highest_Timestamp = n.Highest_Timestamp + 1
+	bidderid := bid.Bidderid
+	if bid.Bidderid == 0 {
+		n.Highest_BidderId++
+		bidderid = n.Highest_BidderId
 	}
-	return &rs.Response{
-		Ack:      false,
-		Bidderid: bid.Bidderid,
+	return &rs.NewBid{
+		Amount: bid.Amount,
+		Bidderid:     bidderid,
+		Timestamp: n.Highest_Timestamp,
 	}
 }
 
-func (n *P2PNode) UpdateFollowers(update *rs.NewBid) {
+//Run only by leader node
+func (n *P2PNode) PropagateToLeader(ctx context.Context, bid *rs.NewBid) (ack *rs.Response, err error) {
+	if CheckBidValidity(bid) {
+		bid = n.UpdateBidAsLeader(bid)
+		n.UpdateFollowers(bid)
+		return &rs.Response{
+			Ack: true,
+			Bidderid:  n.Highest_BidderId,
+		}, nil
+	}
+	return &rs.Response{
+		Ack: false,
+		Bidderid:  bid.Bidderid,
+	}, nil
+}
+
+//Run only by follower nodes
+func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response) {
+		n.Highest_Bid = bid.Amount
+		n.Highest_BidderId = bid.Bidderid
+		n.Highest_Timestamp = bid.Timestamp
+
+		return &rs.Response{
+			Ack: true,
+		}
+}
+
+func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
 	n.peerLock.RLock()
 	for address := range n.peers {
 		if peer, exists := n.peers[address]; exists {
-			_, err := peer.ReplicateBid(context.Background(), &rs.NewBid{
-				Amount:    update.Amount,
-				Bidderid:  update.Bidderid,
-				Timestamp: n.Highest_Timestamp})
+			_, err := peer.ReplicateBid(context.Background(), newbid)
 			if err != nil {
 				log.Printf("Error sending message: %v", err)
 			}
 		}
-		//Send message to followers with the updated value
-
 	}
 	n.peerLock.RUnlock()
 }
 
-func (n *P2PNode) Update(ctx context.Context, update *rs.NewBid) (ack *rs.Response) {
-	//Call from leader to update value
-	n.Highest_Bid = update.Amount
-	n.Highest_BidId = update.Bidderid
-	n.Highest_Timestamp = update.Timestamp
-	return &rs.Response{
-		Ack: true,
-	}
+func (n *P2PNode) ConfirmLeader(NewLeader rs.NewLeader) (response *rs.Response) {
+	n.leader = 
+}
+
+func (n *P2PNode) HeartBeat() (response *rs.Response) {
+	//if heartbeat received, reset timeout
+	
+}
+
+func (n *P2PNode) HeartBeatResponse() () {
+	
+}
+
+func (n *P2PNode) result() (outcome int64) {
+	//return highest value
+	return n.Highest_Bid
 }
 
 func startServer(node *P2PNode, address string) {
@@ -128,6 +163,8 @@ func startServer(node *P2PNode, address string) {
 		//set node leader to be the leader
 		node.IsLeader = true
 	}
+	
+	//if leader, go heartbeat function
 
 	//put the node into the peers map
 
