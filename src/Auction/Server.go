@@ -55,6 +55,10 @@ func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err err
 	}, nil
 }
 
+func (n *P2PNode) ConfirmLeader(NewLeader rs.NewLeader) {
+
+}
+
 func (n *P2PNode) result() (outcome int64) {
 	//return highest value
 	return n.Highest_Bid
@@ -103,10 +107,6 @@ func (n *P2PNode) Update(ctx context.Context, update *sv.Amount) (ack *sv.Respon
 	return &sv.Response{
 		Ack: true,
 	}
-}
-
-func Election() {
-	//Election code
 }
 
 func startServer(node *P2PNode, address string) {
