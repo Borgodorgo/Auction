@@ -27,7 +27,7 @@ func (bidder *Bidder) Bid(amount int64) {
 		Bidderid: bidder.Id,
 	})
 
-	if result.Ack == false {
+	if !result.Ack {
 		bidder.MyLatestBid += 40
 		bidder.AuctionContact.Bid(context.Background(), &as.Amount{
 			Amount:   bidder.MyLatestBid,

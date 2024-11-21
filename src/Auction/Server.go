@@ -1,8 +1,8 @@
 package main
 
 import (
-	as "Replication/m/v2/AuctionService/Auction"
-	rs "Replication/m/v2/ReplicationService/Replication"
+	as "Replication/m/v2/AuctionService"
+	rs "Replication/m/v2/ReplicationService"
 	"context"
 	"log"
 	"net"
@@ -131,7 +131,7 @@ func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
 	n.peerLock.RUnlock()
 }
 
-func (n *P2PNode) ConfirmLeader(NewLeader rs.NewLeader) (response *rs.Response) {
+func (n *P2PNode) ConfirmLeader(NewLeader *rs.NewLeader) (response *rs.Response) {
 	//n.leader =
 	return
 }
