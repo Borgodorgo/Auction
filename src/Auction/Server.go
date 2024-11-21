@@ -42,32 +42,39 @@ func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err err
 				Bidderid:  response.Bidderid,
 			}, nil
 		}
-
-		
 	}
-	//if (!leader)
-	//{return response from leader}
 
-	//if leader:
-	if bid.Amount > n.Highest_Bid {
-		n.UpdateFollowers(bid)
-		n.Highest_Bid = bid.Amount
-		n.Highest_BidId = bid.Id
-		n.Highest_Timestamp = n.Highest_Timestamp + 1
-		return &pb.Ack{
-			Ack: true,
-			Id:  n.Highest_BidId,
-		}, nil
-	}
-	return &pb.Ack{
-		Ack: false,
-		Id:  n.Highest_BidId,
+	response := n.ReplicateBid(ctx, &rs.NewBid{
+		Amount: bid.Amount,
+		Bidderid:     bid.Bidderid,
+	})
+
+	return &as.Ack{
+		Ack: response.Ack,
+		Bidderid:  response.Bidderid,
 	}, nil
 }
 
 func (n *P2PNode) result() (outcome int64) {
 	//return highest value
 	return n.Highest_Bid
+}
+
+func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response) {
+	if bid.Amount > n.Highest_Bid {
+		n.UpdateFollowers(bid)
+		n.Highest_Bid = bid.Amount
+		n.Highest_BidId = bid.Bidderid
+		n.Highest_Timestamp = n.Highest_Timestamp + 1
+		return &rs.Response{
+			Ack: true,
+			Bidderid:  bid.Bidderid, //ADD CHECK TO SEE IF ID IS 0
+		}
+	}
+	return &rs.Response{
+		Ack: false,
+		Bidderid:  bid.Bidderid,
+	}
 }
 
 func (n *P2PNode) UpdateFollowers(update *pb.Amount) {
