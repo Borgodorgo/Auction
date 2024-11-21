@@ -40,15 +40,14 @@ func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err err
 			Ack: response.Ack,
 			Bidderid:  response.Bidderid,
 		}, nil
-		
 	}
 
 	if CheckBidValidity(bid) {
 		bid = n.UpdateBidAsLeader(bid)
 		n.UpdateFollowers(bid)
 		return &as.Ack{
-			Ack: response.Ack,
-			Bidderid:  response.Bidderid,
+			Ack: true,
+			Bidderid: bid.Bidderid,
 		}, nil
 	}
 
@@ -80,6 +79,7 @@ func (n *P2PNode) UpdateBidAsLeader(bid *rs.NewBid) (bid *rs.NewBid) {
 	}
 }
 
+//Run only by leader node
 func (n *P2PNode) PropagateToLeader(ctx context.Context, bid *rs.NewBid) (ack *rs.Response, err error) {
 	if CheckBidValidity(bid) {
 		bid = n.UpdateBidAsLeader(bid)
@@ -95,6 +95,7 @@ func (n *P2PNode) PropagateToLeader(ctx context.Context, bid *rs.NewBid) (ack *r
 	}, nil
 }
 
+//Run only by follower nodes
 func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response) {
 		n.Highest_Bid = bid.Amount
 		n.Highest_BidderId = bid.Bidderid
