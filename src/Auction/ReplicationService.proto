@@ -2,15 +2,18 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package replicationservice
+option go_package="./Auction";
+
+package replicationservice;
 
 message NewBid {
     int64 amount = 1;
     int64 id = 2;
+    int64 timestamp = 3;
 }
 
 message NewLeader {
-    int64 nodeid = 1;
+    string address = 1;
 }
 
 message Response {
@@ -20,5 +23,5 @@ message Response {
 // P2PNetwork
 service ReplicationService {
     rpc ReplicateBid(NewBid) returns (Response);
-    rpc UpdateLeader(NewLeader) returns (Response);
+    rpc ConfirmLeader(NewLeader) returns (Response);
 }

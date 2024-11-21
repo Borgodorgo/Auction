@@ -2,22 +2,26 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
+option go_package="./Auction";
+
 package auctionservice;
 
 message Amount {
     int64 amount = 1;
+    int64 clientid = 2;
 }
 
 message Ack {
     bool ack = 1;
+    int64 clientid = 2;
 }
 
-message Update {
+message Outcome {
     int64 amount = 1;
 }
 
 // Auction
 service AuctionService {
     rpc Bid(Amount) returns (Ack);
-    rpc Result(google.protobuf.Empty) returns (Update);
+    rpc Result(google.protobuf.Empty) returns (Outcome);
 }
