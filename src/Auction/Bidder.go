@@ -21,10 +21,18 @@ type Bidder struct {
 
 func (bidder *Bidder) Bid(amount int64) {
 	log.Printf("Bidding %d", amount)
-	bidder.AuctionContact.Bid(context.Background(), &as.Amount{
+
+	result, _ := bidder.AuctionContact.Bid(context.Background(), &as.Amount{
 		Amount:   amount,
 		Bidderid: bidder.Id,
 	})
+
+	if result.Ack == false {
+		bidder.AuctionContact.Bid(context.Background(), &as.Amount{
+			Amount:   amount + 40,
+			Bidderid: bidder.Id,
+		})
+	}
 }
 
 func (bidder *Bidder) Status() {
