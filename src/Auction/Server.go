@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"sync"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -17,13 +18,16 @@ type P2PNode struct {
 	rs.UnimplementedReplicationServiceServer
 	peers             map[string]rs.ReplicationServiceClient // map of peer addresses to clients
 	peerLock          sync.RWMutex
-	leader            rs.ReplicationServiceServer
+	leader            rs.ReplicationServiceClient
 	Highest_Bid       int64
 	Highest_BidderId  int64
 	Our_Timestamp     int64
 	Highest_Timestamp int64
 	IsLeader          bool
 	peerPorts         []string
+	active            bool
+	counter           int
+	address           string
 }
 
 // Takes a bid from a bidder
@@ -32,36 +36,38 @@ type P2PNode struct {
 func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err error) {
 	if !n.IsLeader {
 		response, _ := n.leader.PropagateToLeader(ctx, &rs.NewBid{
-			Amount: bid.Amount,
-			Bidderid:     bid.Bidderid,
+			Amount:   bid.Amount,
+			Bidderid: bid.Bidderid,
 		})
 
 		return &as.Ack{
-			Ack: response.Ack,
-			Bidderid:  response.Bidderid,
+			Ack:      response.Ack,
+			Bidderid: response.Bidderid,
 		}, nil
 	}
 
-	if CheckBidValidity(bid) {
-		bid = n.UpdateBidAsLeader(bid)
-		n.UpdateFollowers(bid)
+	newBid := &rs.NewBid{
+		Amount:   bid.Amount,
+		Bidderid: bid.Bidderid,
+	}
+
+	if n.CheckBidValidity(newBid) {
+		newBid = n.UpdateBidAsLeader(newBid)
+		n.UpdateFollowers(newBid)
 		return &as.Ack{
-			Ack: true,
+			Ack:      true,
 			Bidderid: bid.Bidderid,
 		}, nil
 	}
 
 	return &as.Ack{
-		Ack: false,
-		Bidderid:  bid.Bidderid,
+		Ack:      false,
+		Bidderid: bid.Bidderid,
 	}, nil
 }
 
-func CheckBidValidity (bid *rs.NewBid) (valid bool) {
-	if bid.Amount > n.Highest_Bid {
-		return true
-	}
-	return false
+func (n *P2PNode) CheckBidValidity(bid *rs.NewBid) (valid bool) {
+	return bid.Amount > n.Highest_Bid
 }
 
 func (n *P2PNode) Result(ctx context.Context, empty *emptypb.Empty) (result *as.Outcome, err error) {
@@ -70,8 +76,7 @@ func (n *P2PNode) Result(ctx context.Context, empty *emptypb.Empty) (result *as.
 	}, err
 }
 
-
-func (n *P2PNode) UpdateBidAsLeader(bid *rs.NewBid) (bid *rs.NewBid) {
+func (n *P2PNode) UpdateBidAsLeader(bid *rs.NewBid) (newbid *rs.NewBid) {
 	n.Highest_Bid = bid.Amount
 	n.Highest_Timestamp = n.Highest_Timestamp + 1
 	bidderid := bid.Bidderid
@@ -80,37 +85,37 @@ func (n *P2PNode) UpdateBidAsLeader(bid *rs.NewBid) (bid *rs.NewBid) {
 		bidderid = n.Highest_BidderId
 	}
 	return &rs.NewBid{
-		Amount: bid.Amount,
-		Bidderid:     bidderid,
+		Amount:    bid.Amount,
+		Bidderid:  bidderid,
 		Timestamp: n.Highest_Timestamp,
 	}
 }
 
-//Run only by leader node
+// Run only by leader node
 func (n *P2PNode) PropagateToLeader(ctx context.Context, bid *rs.NewBid) (ack *rs.Response, err error) {
-	if CheckBidValidity(bid) {
+	if n.CheckBidValidity(bid) {
 		bid = n.UpdateBidAsLeader(bid)
 		n.UpdateFollowers(bid)
 		return &rs.Response{
-			Ack: true,
-			Bidderid:  n.Highest_BidderId,
+			Ack:      true,
+			Bidderid: n.Highest_BidderId,
 		}, nil
 	}
 	return &rs.Response{
-		Ack: false,
-		Bidderid:  bid.Bidderid,
+		Ack:      false,
+		Bidderid: bid.Bidderid,
 	}, nil
 }
 
-//Run only by follower nodes
+// Run only by follower nodes
 func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response) {
-		n.Highest_Bid = bid.Amount
-		n.Highest_BidderId = bid.Bidderid
-		n.Highest_Timestamp = bid.Timestamp
+	n.Highest_Bid = bid.Amount
+	n.Highest_BidderId = bid.Bidderid
+	n.Highest_Timestamp = bid.Timestamp
 
-		return &rs.Response{
-			Ack: true,
-		}
+	return &rs.Response{
+		Ack: true,
+	}
 }
 
 func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
@@ -127,24 +132,63 @@ func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
 }
 
 func (n *P2PNode) ConfirmLeader(NewLeader rs.NewLeader) (response *rs.Response) {
-	n.leader = 
+	//n.leader =
+	return
 }
 
 func (n *P2PNode) HeartBeat() (response *rs.Response) {
 	//if heartbeat received, reset timeout
-	
+	n.counter = 0
+	return &rs.Response{
+		Ack: true,
+	}
 }
 
-func (n *P2PNode) HeartBeatResponse() () {
-	
+func (n *P2PNode) HeartBeating() {
+	//send heartbeat to all peers
+	for {
+
+		if n.active {
+			log.Println("Heartbeat")
+			time.Sleep(1 * time.Second)
+
+			/*
+				n.peerLock.RLock()
+				for address := range n.peers {
+					if peer, exists := n.peers[address]; exists {
+						_, err := peer.HeartBeat(context.Background(), &emptypb.Empty{})
+						if err != nil {
+							log.Printf("Error sending message: %v", err)
+						}
+					}
+				}
+				n.peerLock.RUnlock()
+			*/
+
+		}
+	}
 }
 
-func (n *P2PNode) result() (outcome int64) {
-	//return highest value
-	return n.Highest_Bid
+func (n *P2PNode) Election() {
+	//send election message to all peers
+	log.Println("Election time")
+	n.peerLock.RLock()
+	for address := range n.peers {
+		if peer, exists := n.peers[address]; exists {
+			_, err := peer.ConfirmLeader(context.Background(), &rs.NewLeader{
+				Address: n.address,
+			})
+			if err != nil {
+				log.Printf("Error sending message: %v", err)
+			}
+		}
+	}
+	n.peerLock.RUnlock()
 }
 
-func startServer(node *P2PNode, address string) {
+func startServer(node *P2PNode, address string, leader bool) {
+	node.IsLeader = leader
+	node.address = address
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
@@ -155,19 +199,32 @@ func startServer(node *P2PNode, address string) {
 
 	log.Printf("P2P node is running on port %s/n", address)
 
+	if leader {
+		log.Print("Leader starting heartbeat")
+		go node.HeartBeating()
+	}
+
+	if !leader {
+		go func() {
+			for {
+				log.Printf("Counter: %d", node.counter)
+				node.counter++
+				if node.counter > 5 && node.address == ":5002" {
+					node.Election()
+
+				}
+				time.Sleep(1 * time.Second)
+			}
+		}()
+	}
+
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
 
-	if len(node.peers) == 0 {
-		//set node leader to be the leader
-		node.IsLeader = true
-	}
-	
 	//if leader, go heartbeat function
 
 	//put the node into the peers map
-
 }
 
 func CreateNode() *P2PNode {
@@ -176,6 +233,13 @@ func CreateNode() *P2PNode {
 		Our_Timestamp:     1,
 		Highest_Timestamp: 1,
 		peerPorts:         make([]string, 5),
+		active:            true,
 	}
 	return node
+}
+
+func (n *P2PNode) Crash() {
+	log.Println("Is crashing")
+	n.peerLock.Lock()
+	n.active = false
 }

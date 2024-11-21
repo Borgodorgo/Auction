@@ -4,7 +4,7 @@ import (
 	as "Replication/m/v2/AuctionService/Auction"
 	"context"
 	"log"
-	"math/rand/v2"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -25,6 +25,7 @@ func (bidder *Bidder) Bid(amount int64) {
 		Amount:   amount,
 		Bidderid: bidder.Id,
 	})
+	time.Sleep(1 * time.Second)
 }
 
 func (bidder *Bidder) Status() {
@@ -44,7 +45,8 @@ func (bidder *Bidder) Status() {
 
 func (bidder *Bidder) FindNode() {
 	for {
-		randomNumber := rand.Int64N(4)
+		//randomNumber := rand.Int64N(4)
+		randomNumber := 0
 		address := "localhost:" + bidder.nodes[randomNumber]
 		log.Print(randomNumber)
 		log.Print(address)
