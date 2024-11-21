@@ -1,8 +1,8 @@
 package main
 
 import (
-	pb "Mutual_Exclusion/m/v2/raalgo"
-	sv "Mutual_Exclusion/m/v2/serverside"
+	as "Replication/m/v2/AuctionService/Auction"
+	rs "Replication/m/v2/ReplicationService/Replication"
 	"context"
 	"log"
 	"net"

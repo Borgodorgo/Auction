@@ -4,7 +4,7 @@
 // - protoc             v5.28.2
 // source: ReplicationService.proto
 
-package Auction
+package Replication
 
 import (
 	context "context"
