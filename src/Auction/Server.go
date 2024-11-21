@@ -1,20 +1,22 @@
 package main
 
 import (
-	"Mutual_Exclusion/m/v2/raalgo"
-	pb "Mutual_Exclusion/m/v2/raalgo"
-	sv "Mutual_Exclusion/m/v2/serverside"
+	as "Replication/m/v2/AuctionService/Auction"
+	rs "Replication/m/v2/ReplicationService/Replication"
 	"context"
 	"log"
+	"net"
 	"sync"
+
+	"google.golang.org/grpc"
 )
 
 type P2PNode struct {
-	pb.UnimplementedAuctionServer
-	sv.UnimplementedP2PNetworkServer
-	peers             map[string]sv.P2PNetworkClient // map of peer addresses to clients
+	as.UnimplementedAuctionServiceServer
+	rs.UnimplementedReplicationServiceServer
+	peers             map[string]rs.ReplicationServiceClient // map of peer addresses to clients
 	peerLock          sync.RWMutex
-	leader            sv.P2PNetworkClient
+	leader            rs.ReplicationServiceClient
 	Highest_Bid       int64
 	Highest_BidId     int64
 	Our_Timestamp     int64
@@ -23,38 +25,56 @@ type P2PNode struct {
 	peerPorts         []string
 }
 
-func (n *P2PNode) Bid(ctx context.Context, bid *pb.Amount) *raalgo.Ack {
+
+//Takes a bid from a bidder
+//If not leader, it propagates the bid to the leader
+//If leader, it updates the highest bid and propagates the bid to followers
+func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err error) {
 	if !n.IsLeader {
-		ack, _ := n.leader.Bid(ctx, &sv.Amount{
+		response, _ := n.leader.ReplicateBid(ctx, &rs.NewBid{
 			Amount: bid.Amount,
-			Id:     bid.Id,
+			Bidderid:     bid.Bidderid,
 		})
 
-		return &pb.Ack{
-			Ack: ack.Ack,
-			Id:  ack.Id,
+		if (response.Ack) {
+			return &as.Ack{
+				Ack: response.Ack,
+				Bidderid:  response.Bidderid,
+			}, nil
 		}
 	}
-	//if (!leader) {return response from leader}
-	if bid.Amount > n.Highest_Bid {
-		n.UpdateFollowers(bid)
-		n.Highest_Bid = bid.Amount
-		n.Highest_BidId = bid.Id
-		n.Highest_Timestamp = n.Highest_Timestamp + 1
-		return &pb.Ack{
-			Ack: true,
-			Id:  n.Highest_BidId,
-		}
-	}
-	return &pb.Ack{
-		Ack: false,
-		Id:  n.Highest_BidId,
-	}
+
+	response := n.ReplicateBid(ctx, &rs.NewBid{
+		Amount: bid.Amount,
+		Bidderid:     bid.Bidderid,
+	})
+
+	return &as.Ack{
+		Ack: response.Ack,
+		Bidderid:  response.Bidderid,
+	}, nil
 }
 
 func (n *P2PNode) result() (outcome int64) {
 	//return highest value
 	return n.Highest_Bid
+}
+
+func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response) {
+	if bid.Amount > n.Highest_Bid {
+		n.UpdateFollowers(bid)
+		n.Highest_Bid = bid.Amount
+		n.Highest_BidId = bid.Bidderid
+		n.Highest_Timestamp = n.Highest_Timestamp + 1
+		return &rs.Response{
+			Ack: true,
+			Bidderid:  bid.Bidderid, //ADD CHECK TO SEE IF ID IS 0
+		}
+	}
+	return &rs.Response{
+		Ack: false,
+		Bidderid:  bid.Bidderid,
+	}
 }
 
 func (n *P2PNode) UpdateFollowers(update *pb.Amount) {
@@ -87,4 +107,28 @@ func (n *P2PNode) Update(ctx context.Context, update *sv.Amount) (ack *sv.Respon
 
 func Election() {
 	//Election code
+}
+
+func startServer(node *P2PNode, address string) {
+	lis, err := net.Listen("tcp", address)
+	if err != nil {
+		log.Fatalf("Failed to listen: %v", err)
+	}
+
+	grpcServer := grpc.NewServer()
+	pb.RegisterAuctionServer(grpcServer, node)
+
+	log.Printf("P2P node is running on port %s/n", address)
+
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("Failed to serve: %v", err)
+	}
+
+	if len(node.peers) == 0 {
+		//set node leader to be the leader
+		node.IsLeader = true
+	}
+
+	//put the node into the peers map
+
 }
