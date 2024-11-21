@@ -126,7 +126,7 @@ func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
 	n.peerLock.RUnlock()
 }
 
-func (n *P2PNode) ConfirmLeader(NewLeader rs.NewLeader) (response *rs.Response) {
+func (n *P2PNode) ConfirmLeader(NewLeader *rs.NewLeader) (response *rs.Response) {
 	n.leader = 
 }
 

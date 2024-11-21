@@ -28,8 +28,9 @@ func (bidder *Bidder) Bid(amount int64) {
 	})
 
 	if result.Ack == false {
+		bidder.MyLatestBid += 40
 		bidder.AuctionContact.Bid(context.Background(), &as.Amount{
-			Amount:   amount + 40,
+			Amount:   bidder.MyLatestBid,
 			Bidderid: bidder.Id,
 		})
 	}
