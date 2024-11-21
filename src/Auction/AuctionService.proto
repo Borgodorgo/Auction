@@ -2,18 +2,14 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/raalgo/Auction/raalgo";
-
-package raalgo;
+package auctionservice;
 
 message Amount {
     int64 amount = 1;
-    int64 id = 2;
 }
 
 message Ack {
     bool ack = 1;
-    int64 id = 2;
 }
 
 message Update {
@@ -21,7 +17,7 @@ message Update {
 }
 
 // Auction
-service Auction {
+service AuctionService {
     rpc Bid(Amount) returns (Ack);
     rpc Result(google.protobuf.Empty) returns (Update);
 }

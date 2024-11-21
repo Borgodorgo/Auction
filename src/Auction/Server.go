@@ -37,7 +37,10 @@ func (n *P2PNode) Bid(ctx context.Context, bid *pb.Amount) (ack *pb.Ack, err err
 			Id:  ack.Id,
 		}, nil
 	}
-	//if (!leader) {return response from leader}
+	//if (!leader)
+	//{return response from leader}
+
+	//if leader:
 	if bid.Amount > n.Highest_Bid {
 		n.UpdateFollowers(bid)
 		n.Highest_Bid = bid.Amount

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package replicationservice
+
+message NewBid {
+    int64 amount = 1;
+    int64 id = 2;
+}
+
+message NewLeader {
+    int64 nodeid = 1;
+}
+
+message Response {
+    bool ack = 1;
+}
+
+// P2PNetwork
+service ReplicationService {
+    rpc ReplicateBid(NewBid) returns (Response);
+    rpc UpdateLeader(NewLeader) returns (Response);
+}
