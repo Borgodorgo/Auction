@@ -1,7 +1,7 @@
 package main
 
 import (
-	as "Replication/m/v2/AuctionService/Auction"
+	as "Replication/m/v2/AuctionService"
 	"context"
 	"log"
 	"math/rand/v2"
