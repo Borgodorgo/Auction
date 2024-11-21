@@ -1,7 +1,7 @@
 package main
 
 import (
-	as "Replication/m/v2/AuctionService/Auction"
+	as "Replication/m/v2/AuctionService"
 	"context"
 	"log"
 	"time"
@@ -21,11 +21,22 @@ type Bidder struct {
 
 func (bidder *Bidder) Bid(amount int64) {
 	log.Printf("Bidding %d", amount)
-	bidder.AuctionContact.Bid(context.Background(), &as.Amount{
+
+	result, _ := bidder.AuctionContact.Bid(context.Background(), &as.Amount{
 		Amount:   amount,
 		Bidderid: bidder.Id,
 	})
+
+	if result.Ack == false {
+		bidder.MyLatestBid += 40
+		bidder.AuctionContact.Bid(context.Background(), &as.Amount{
+			Amount:   bidder.MyLatestBid,
+			Bidderid: bidder.Id,
+		})
+	}
+
 	time.Sleep(1 * time.Second)
+
 }
 
 func (bidder *Bidder) Status() {
