@@ -17,6 +17,7 @@ type Bidder struct {
 	AuctionContact as.AuctionClient
 	MyLatestBid    int64
 	Id             int64
+	nodes          []string
 
 	peers         map[string]pb.P2PnetworkClient // map of peer addresses to clients
 	peerLock      sync.RWMutex
@@ -44,12 +45,10 @@ func (bidder *Bidder) Status() {
 	}
 }
 
-func FindNode() {
-	nodes := []string{"5001", "5002", "5003", "5004", "5005"}
-
+func (bidder *Bidder) FindNode() {
 	for {
 		randomNumber := rand.Int64N(4)
-		address := nodes[randomNumber]
+		address := bidder.nodes[randomNumber]
 		conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
 			log.Printf("Failed to connect to peer %s: %v", address, err)
@@ -65,5 +64,11 @@ func FindNode() {
 		log.Printf("Connected to node %s", address)
 
 	}
-
+}
+func start() {
+	bidder := Bidder{
+		nodes: []string{"5001", "5002", "5003", "5004", "5005"},
+	}
+	bidder.FindNode()
+	bidder.Status()
 }
