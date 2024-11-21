@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type P2PNode struct {
@@ -25,10 +26,9 @@ type P2PNode struct {
 	peerPorts         []string
 }
 
-
-//Takes a bid from a bidder
-//If not leader, it propagates the bid to the leader
-//If leader, it updates the highest bid and propagates the bid to followers
+// Takes a bid from a bidder
+// If not leader, it propagates the bid to the leader
+// If leader, it updates the highest bid and propagates the bid to followers
 func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err error) {
 	if !n.IsLeader {
 		response, _ := n.leader.PropagateToLeader(ctx, &rs.NewBid{
@@ -63,6 +63,13 @@ func CheckBidValidity (bid *rs.NewBid) (valid bool) {
 	}
 	return false
 }
+
+func (n *P2PNode) Result(ctx context.Context, empty *emptypb.Empty) (result *as.Outcome, err error) {
+	return &as.Outcome{
+		Amount: n.Highest_Bid,
+	}, err
+}
+
 
 func (n *P2PNode) UpdateBidAsLeader(bid *rs.NewBid) (bid *rs.NewBid) {
 	n.Highest_Bid = bid.Amount
@@ -144,7 +151,7 @@ func startServer(node *P2PNode, address string) {
 	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterAuctionServer(grpcServer, node)
+	as.RegisterAuctionServiceServer(grpcServer, node)
 
 	log.Printf("P2P node is running on port %s/n", address)
 
@@ -161,4 +168,14 @@ func startServer(node *P2PNode, address string) {
 
 	//put the node into the peers map
 
+}
+
+func CreateNode() *P2PNode {
+	node := &P2PNode{
+		peers:             make(map[string]rs.ReplicationServiceClient),
+		Our_Timestamp:     1,
+		Highest_Timestamp: 1,
+		peerPorts:         make([]string, 5),
+	}
+	return node
 }
