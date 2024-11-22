@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package auction;
+
+service AuctionService {
+  // client-to-leader
+  rpc Bid (BidRequest) returns (BidResponse);
+  rpc GetStatus (StatusRequest) returns (StatusResponse);
+
+  // server-to-server
+  rpc SyncBid (BidRequest) returns (SyncResponse);
+  rpc Heartbeat (HeartbeatRequest) returns (HeartbeatResponse);
+  rpc AnnounceLeader (LeaderAnnouncement) returns (AckResponse);
+}
+
+message BidRequest {
+  string bidder = 1;
+  int32 amount = 2;
+}
+
+message BidResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message StatusRequest {}
+
+message StatusResponse {
+  string highest_bidder = 1;
+  int32 highest_bid = 2;
+  string message = 3;
+}
+
+message SyncResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message HeartbeatRequest {
+  string followerId = 1;
+}
+
+message HeartbeatResponse {
+  bool isLeaderAlive = 1;
+}
+
+message LeaderAnnouncement {
+  string newLeaderId = 1;
+}
+
+message AckResponse {
+  bool success = 1;
+  string message = 2;
+}
