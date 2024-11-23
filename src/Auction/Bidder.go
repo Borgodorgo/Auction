@@ -81,7 +81,6 @@ func start() {
 	}
 
 	bidder.FindNode()
-	log.Print("Found node")
 	for {
 		bidder.Status()
 	}

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -108,22 +109,24 @@ func (n *P2PNode) PropagateToLeader(ctx context.Context, bid *rs.NewBid) (ack *r
 }
 
 // Run only by follower nodes
-func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response) {
+func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response, err error) {
 	n.Highest_Bid = bid.Amount
 	n.Highest_BidderId = bid.Bidderid
 	n.Highest_Timestamp = bid.Timestamp
 
 	return &rs.Response{
 		Ack: true,
-	}
+	}, err
 }
 
 func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
+
 	n.peerLock.RLock()
 	for address := range n.peers {
 		if peer, exists := n.peers[address]; exists {
 			_, err := peer.ReplicateBid(context.Background(), newbid)
 			if err != nil {
+				log.Printf("Line 129 had issues using replicate bid %s", address)
 				log.Printf("Error sending message: %v", err)
 			}
 		}
@@ -131,39 +134,36 @@ func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
 	n.peerLock.RUnlock()
 }
 
-func (n *P2PNode) ConfirmLeader(NewLeader *rs.NewLeader) (response *rs.Response) {
+func (n *P2PNode) ConfirmLeader(ctx context.Context, NewLeader *rs.NewLeader) (response *rs.Response, err error) {
 	//n.leader =
 	return
 }
 
-func (n *P2PNode) HeartBeat() (response *rs.Response) {
+func (n *P2PNode) HeartBeat(ctx context.Context, empty *emptypb.Empty) (response *rs.Response, err error) {
 	//if heartbeat received, reset timeout
 	n.counter = 0
 	return &rs.Response{
 		Ack: true,
-	}
+	}, err
 }
 
 func (n *P2PNode) HeartBeating() {
 	//send heartbeat to all peers
 	for {
-
 		if n.active {
 			log.Println("Heartbeat")
 			time.Sleep(1 * time.Second)
 
-			/*
-				n.peerLock.RLock()
-				for address := range n.peers {
-					if peer, exists := n.peers[address]; exists {
-						_, err := peer.HeartBeat(context.Background(), &emptypb.Empty{})
-						if err != nil {
-							log.Printf("Error sending message: %v", err)
-						}
+			n.peerLock.RLock()
+			for address := range n.peers {
+				if peer, exists := n.peers[address]; exists {
+					_, err := peer.HeartBeat(context.Background(), &emptypb.Empty{})
+					if err != nil {
+						log.Printf("Error sending message: %v", err)
 					}
 				}
-				n.peerLock.RUnlock()
-			*/
+			}
+			n.peerLock.RUnlock()
 
 		}
 	}
@@ -186,7 +186,8 @@ func (n *P2PNode) Election() {
 	n.peerLock.RUnlock()
 }
 
-func startServer(node *P2PNode, address string, leader bool) {
+func createServer(node *P2PNode, address string, leader bool) {
+
 	node.IsLeader = leader
 	node.address = address
 	lis, err := net.Listen("tcp", address)
@@ -196,27 +197,9 @@ func startServer(node *P2PNode, address string, leader bool) {
 
 	grpcServer := grpc.NewServer()
 	as.RegisterAuctionServiceServer(grpcServer, node)
+	rs.RegisterReplicationServiceServer(grpcServer, node)
 
 	log.Printf("P2P node is running on port %s/n", address)
-
-	if leader {
-		log.Print("Leader starting heartbeat")
-		go node.HeartBeating()
-	}
-
-	if !leader {
-		go func() {
-			for {
-				log.Printf("Counter: %d", node.counter)
-				node.counter++
-				if node.counter > 5 && node.address == ":5002" {
-					node.Election()
-
-				}
-				time.Sleep(1 * time.Second)
-			}
-		}()
-	}
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
@@ -242,4 +225,52 @@ func (n *P2PNode) Crash() {
 	log.Println("Is crashing")
 	n.peerLock.Lock()
 	n.active = false
+}
+
+func (n *P2PNode) PeerSetup() {
+	n.peerPorts[0] = ":5001"
+	n.peerPorts[1] = ":5002"
+	n.peerPorts[2] = ":5003"
+	n.peerPorts[3] = ":5004"
+	n.peerPorts[4] = ":5005"
+
+	for i := 0; i < 5; i++ {
+		address := "localhost" + n.peerPorts[i]
+		conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		if err != nil {
+			log.Printf("Failed to connect to peer %s: %v", address, err)
+			return
+		}
+
+		client := rs.NewReplicationServiceClient(conn)
+
+		n.peerLock.Lock()
+		n.peers[address] = client
+		n.peerLock.Unlock()
+
+		log.Printf("Connected to peer %s", address)
+
+	}
+}
+
+func (n *P2PNode) startServer() {
+	if n.IsLeader {
+		n.active = true
+		log.Print("Leader starting heartbeat")
+		go n.HeartBeating()
+	}
+
+	if !n.IsLeader {
+		go func() {
+			for {
+				log.Printf("Counter: %d", n.counter)
+				n.counter++
+				if n.counter > 5 && n.address == ":5002" {
+					n.Election()
+
+				}
+				time.Sleep(1 * time.Second)
+			}
+		}()
+	}
 }

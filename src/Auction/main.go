@@ -40,24 +40,32 @@ import "time"
 	}
 */
 func main() {
-	node1 := CreateNode()
-	node2 := CreateNode()
-	node3 := CreateNode()
-	node4 := CreateNode()
-	node5 := CreateNode()
-	go startServer(node1, ":5001", true)
-	go startServer(node2, ":5002", false)
-	go startServer(node3, ":5003", false)
-	go startServer(node4, ":5004", false)
-	go startServer(node5, ":5005", false)
+	nodes := make([]*P2PNode, 5)
+	for i := 0; i < 5; i++ {
+		nodes[i] = CreateNode()
+	}
 
+	for i := 0; i < 5; i++ {
+		nodes[i].PeerSetup()
+	}
+
+	leader := true
+	for i := 0; i < 5; i++ {
+
+		go createServer(nodes[i], nodes[i].peerPorts[i], leader)
+		leader = false
+	}
+
+	for i := 0; i < 5; i++ {
+		go nodes[i].startServer()
+	}
 	time.Sleep(3 * time.Second)
 	for i := 0; i < 5; i++ {
 		go start()
 	}
 
 	time.Sleep(3 * time.Second)
-	go node1.Crash()
+	go nodes[0].Crash()
 	for {
 		time.Sleep(time.Second)
 	}
