@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package Auction;
 
-option go_package = "src/auction.proto";
+option go_package = "assignment5/auction/src/grpc";
 
 service AuctionService {
   // client-to-leader

@@ -4,7 +4,7 @@
 // - protoc             v5.28.1
 // source: auction.proto
 
-package auction_proto
+package grpc
 
 import (
 	context "context"
