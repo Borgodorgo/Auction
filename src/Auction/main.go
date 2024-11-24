@@ -56,7 +56,8 @@ func main() {
 		leader = false
 	}
 
-	for i := 0; i < 5; i++ {
+	go nodes[0].startServer()
+	for i := 1; i < 5; i++ {
 		go nodes[i].startServer()
 	}
 	time.Sleep(3 * time.Second)
@@ -64,7 +65,7 @@ func main() {
 		go start()
 	}
 
-	time.Sleep(3 * time.Second)
+	time.Sleep(5 * time.Second)
 	go nodes[0].Crash()
 	for {
 		time.Sleep(time.Second)

@@ -47,11 +47,16 @@ func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err err
 		}, nil
 	}
 
+	if bid.Bidderid == 0 {
+		n.Highest_BidderId++
+		bid.Bidderid = n.Highest_BidderId
+	}
 	newBid := &rs.NewBid{
 		Amount:   bid.Amount,
 		Bidderid: bid.Bidderid,
 	}
 
+	log.Printf("Bidder %d Bidding %d", newBid.Bidderid, newBid.Amount)
 	if n.CheckBidValidity(newBid) {
 		newBid = n.UpdateBidAsLeader(newBid)
 		n.UpdateFollowers(newBid)
@@ -126,7 +131,6 @@ func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
 		if peer, exists := n.peers[address]; exists {
 			_, err := peer.ReplicateBid(context.Background(), newbid)
 			if err != nil {
-				log.Printf("Line 129 had issues using replicate bid %s", address)
 				log.Printf("Error sending message: %v", err)
 			}
 		}
@@ -135,8 +139,15 @@ func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
 }
 
 func (n *P2PNode) ConfirmLeader(ctx context.Context, NewLeader *rs.NewLeader) (response *rs.Response, err error) {
-	//n.leader =
-	return
+
+	log.Printf("New leader is %s", NewLeader.Address)
+	address := "localhost" + NewLeader.Address
+	n.leader = n.peers[address]
+	n.IsLeader = false
+
+	return &rs.Response{
+		Ack: true,
+	}, err
 }
 
 func (n *P2PNode) HeartBeat(ctx context.Context, empty *emptypb.Empty) (response *rs.Response, err error) {
@@ -151,10 +162,8 @@ func (n *P2PNode) HeartBeating() {
 	//send heartbeat to all peers
 	for {
 		if n.active {
-			log.Println("Heartbeat")
-			time.Sleep(1 * time.Second)
-
 			n.peerLock.RLock()
+			log.Println("Heartbeat")
 			for address := range n.peers {
 				if peer, exists := n.peers[address]; exists {
 					_, err := peer.HeartBeat(context.Background(), &emptypb.Empty{})
@@ -164,7 +173,7 @@ func (n *P2PNode) HeartBeating() {
 				}
 			}
 			n.peerLock.RUnlock()
-
+			time.Sleep(1 * time.Second)
 		}
 	}
 }
@@ -173,16 +182,28 @@ func (n *P2PNode) Election() {
 	//send election message to all peers
 	log.Println("Election time")
 	n.peerLock.RLock()
+	counter := len(n.peers) - 1
 	for address := range n.peers {
 		if peer, exists := n.peers[address]; exists {
-			_, err := peer.ConfirmLeader(context.Background(), &rs.NewLeader{
+			ack, err := peer.ConfirmLeader(context.Background(), &rs.NewLeader{
 				Address: n.address,
 			})
 			if err != nil {
 				log.Printf("Error sending message: %v", err)
 			}
+			if ack.Ack {
+				counter--
+			}
+			if counter == 0 {
+				break
+			}
 		}
+
 	}
+	n.IsLeader = true
+	n.active = true
+	n.counter = 0
+	go n.HeartBeating()
 	n.peerLock.RUnlock()
 }
 
@@ -223,8 +244,8 @@ func CreateNode() *P2PNode {
 
 func (n *P2PNode) Crash() {
 	log.Println("Is crashing")
-	n.peerLock.Lock()
 	n.active = false
+	n.peerLock.Lock()
 }
 
 func (n *P2PNode) PeerSetup() {
@@ -244,11 +265,12 @@ func (n *P2PNode) PeerSetup() {
 
 		client := rs.NewReplicationServiceClient(conn)
 
+		if i == 0 {
+			n.leader = client
+		}
 		n.peerLock.Lock()
 		n.peers[address] = client
 		n.peerLock.Unlock()
-
-		log.Printf("Connected to peer %s", address)
 
 	}
 }
@@ -267,6 +289,7 @@ func (n *P2PNode) startServer() {
 				n.counter++
 				if n.counter > 5 && n.address == ":5002" {
 					n.Election()
+					break
 
 				}
 				time.Sleep(1 * time.Second)
