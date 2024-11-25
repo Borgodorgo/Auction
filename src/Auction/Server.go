@@ -35,12 +35,19 @@ type P2PNode struct {
 // If not leader, it propagates the bid to the leader
 // If leader, it updates the highest bid and propagates the bid to followers
 func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err error) {
-	if !n.IsLeader {
-		response, _ := n.leader.PropagateToLeader(ctx, &rs.NewBid{
+	if !n.IsLeader && n.active {
+		log.Printf("Server %s propagating to leader", n.address)
+		response, err := n.leader.PropagateToLeader(ctx, &rs.NewBid{
 			Amount:   bid.Amount,
 			Bidderid: bid.Bidderid,
 		})
-
+		if err != nil {
+			log.Printf("Error sending message: %v", err)
+			return &as.Ack{
+				Ack:      false,
+				Bidderid: bid.Bidderid,
+			}, nil
+		}
 		return &as.Ack{
 			Ack:      response.Ack,
 			Bidderid: response.Bidderid,
@@ -56,8 +63,8 @@ func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err err
 		Bidderid: bid.Bidderid,
 	}
 
-	log.Printf("Bidder %d Bidding %d", newBid.Bidderid, newBid.Amount)
 	if n.CheckBidValidity(newBid) {
+		log.Printf("Bidder %d Successfully bidded %d", newBid.Bidderid, newBid.Amount)
 		newBid = n.UpdateBidAsLeader(newBid)
 		n.UpdateFollowers(newBid)
 		return &as.Ack{
@@ -73,6 +80,7 @@ func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err err
 }
 
 func (n *P2PNode) CheckBidValidity(bid *rs.NewBid) (valid bool) {
+	log.Printf("Checking bid validity Bid: %d Highest: %d", bid.Amount, n.Highest_Bid)
 	return bid.Amount > n.Highest_Bid
 }
 
@@ -99,6 +107,7 @@ func (n *P2PNode) UpdateBidAsLeader(bid *rs.NewBid) (newbid *rs.NewBid) {
 
 // Run only by leader node
 func (n *P2PNode) PropagateToLeader(ctx context.Context, bid *rs.NewBid) (ack *rs.Response, err error) {
+	log.Printf("Leader received bid from %d", bid.Bidderid)
 	if n.CheckBidValidity(bid) {
 		bid = n.UpdateBidAsLeader(bid)
 		n.UpdateFollowers(bid)
@@ -115,6 +124,7 @@ func (n *P2PNode) PropagateToLeader(ctx context.Context, bid *rs.NewBid) (ack *r
 
 // Run only by follower nodes
 func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Response, err error) {
+	log.Printf("Follower %s received bid from %d", n.address, bid.Bidderid)
 	n.Highest_Bid = bid.Amount
 	n.Highest_BidderId = bid.Bidderid
 	n.Highest_Timestamp = bid.Timestamp
@@ -125,8 +135,6 @@ func (n *P2PNode) ReplicateBid(ctx context.Context, bid *rs.NewBid) (ack *rs.Res
 }
 
 func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
-
-	n.peerLock.RLock()
 	for address := range n.peers {
 		if peer, exists := n.peers[address]; exists {
 			_, err := peer.ReplicateBid(context.Background(), newbid)
@@ -135,7 +143,6 @@ func (n *P2PNode) UpdateFollowers(newbid *rs.NewBid) {
 			}
 		}
 	}
-	n.peerLock.RUnlock()
 }
 
 func (n *P2PNode) ConfirmLeader(ctx context.Context, NewLeader *rs.NewLeader) (response *rs.Response, err error) {
@@ -162,7 +169,6 @@ func (n *P2PNode) HeartBeating() {
 	//send heartbeat to all peers
 	for {
 		if n.active {
-			n.peerLock.RLock()
 			log.Println("Heartbeat")
 			for address := range n.peers {
 				if peer, exists := n.peers[address]; exists {
@@ -172,7 +178,6 @@ func (n *P2PNode) HeartBeating() {
 					}
 				}
 			}
-			n.peerLock.RUnlock()
 			time.Sleep(1 * time.Second)
 		}
 	}
@@ -276,8 +281,8 @@ func (n *P2PNode) PeerSetup() {
 }
 
 func (n *P2PNode) startServer() {
+
 	if n.IsLeader {
-		n.active = true
 		log.Print("Leader starting heartbeat")
 		go n.HeartBeating()
 	}

@@ -57,6 +57,7 @@ func main() {
 	}
 
 	go nodes[0].startServer()
+	time.Sleep(1 * time.Second)
 	for i := 1; i < 5; i++ {
 		go nodes[i].startServer()
 	}
