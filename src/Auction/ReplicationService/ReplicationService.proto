@@ -27,4 +27,5 @@ service ReplicationService {
     rpc ConfirmLeader(NewLeader) returns (Response);
     rpc PropagateToLeader(NewBid) returns (Response);
     rpc HeartBeat(google.protobuf.Empty) returns (Response);
+    rpc EndAuction(NewBid) returns (google.protobuf.Empty);
 }

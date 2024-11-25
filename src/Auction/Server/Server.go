@@ -295,7 +295,7 @@ func (n *P2PNode) Crash() {
 func (n *P2PNode) PeerSetup() {
 	n.peerPorts[0] = ":5001"
 	n.peerPorts[1] = ":5002"
-	// n.peerPorts[2] = ":5003"
+	n.peerPorts[2] = ":5003"
 	// n.peerPorts[3] = ":5004"
 	// n.peerPorts[4] = ":5005"
 
@@ -339,6 +339,12 @@ func (n *P2PNode) startLeader() {
 }
 
 func main() {
+	logFile, err := os.OpenFile("../Server-log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Failed to open log file: %v", err)
+	}
+	defer logFile.Close()
+	log.SetOutput(logFile)
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	input := scanner.Text()
