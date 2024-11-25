@@ -51,6 +51,7 @@ func (bidder *Bidder) Status() {
 	if err != nil {
 		log.Printf("Failed to get auction status: %v", err)
 		bidder.FindNode()
+		return
 		//bidder.Status()
 	}
 
@@ -64,7 +65,7 @@ func (bidder *Bidder) Status() {
 
 func (bidder *Bidder) FindNode() {
 	for {
-		randomNumber := rand.Int64N(4)
+		randomNumber := rand.Int64N(2)
 		address := "localhost:" + bidder.nodes[randomNumber]
 		log.Print(randomNumber)
 		log.Print(address)
@@ -93,4 +94,8 @@ func start() {
 		bidder.Status()
 		time.Sleep(4 * time.Second)
 	}
+}
+
+func main() {
+	start()
 }
