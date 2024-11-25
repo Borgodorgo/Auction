@@ -38,7 +38,10 @@ type P2PNode struct {
 // If not leader, it propagates the bid to the leader
 // If leader, it updates the highest bid and propagates the bid to followers
 func (n *P2PNode) Bid(ctx context.Context, bid *as.Amount) (ack *as.Ack, err error) {
-	if !n.IsLeader && n.active {
+	if !n.active {
+		return
+	}
+	if !n.IsLeader {
 		log.Printf("Server %s propagating to leader", n.address)
 		response, err := n.leader.PropagateToLeader(ctx, &rs.NewBid{
 			Amount:   bid.Amount,
@@ -185,7 +188,9 @@ func (n *P2PNode) HeartBeating() {
 			}
 			time.Sleep(1 * time.Second)
 			n.countdown++
-			if n.countdown > 10 {
+			log.Printf("Countdown: %d", n.countdown)
+			if n.countdown > 15 {
+				log.Print("Auction ended")
 				n.active = false
 				n.stopAuction()
 			}
@@ -295,7 +300,7 @@ func (n *P2PNode) Crash() {
 func (n *P2PNode) PeerSetup() {
 	n.peerPorts[0] = ":5001"
 	n.peerPorts[1] = ":5002"
-	n.peerPorts[2] = ":5003"
+	// n.peerPorts[2] = ":5003"
 	// n.peerPorts[3] = ":5004"
 	// n.peerPorts[4] = ":5005"
 
@@ -322,14 +327,17 @@ func (n *P2PNode) PeerSetup() {
 
 func (n *P2PNode) startServer() {
 	for {
-		log.Printf("Counter: %d", n.counter)
-		n.counter++
-		if n.counter > 5 && n.address == ":5002" {
-			n.Election()
-			break
+		if n.active {
+			log.Printf("Counter: %d", n.counter)
+			n.counter++
+			n.countdown++
+			if n.counter > 5 && n.address == ":5002" {
+				n.Election()
+				break
 
+			}
+			time.Sleep(1 * time.Second)
 		}
-		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -339,12 +347,12 @@ func (n *P2PNode) startLeader() {
 }
 
 func main() {
-	logFile, err := os.OpenFile("../Server-log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("Failed to open log file: %v", err)
-	}
-	defer logFile.Close()
-	log.SetOutput(logFile)
+	// logFile, err := os.OpenFile("../Server-log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	// if err != nil {
+	// 	log.Fatalf("Failed to open log file: %v", err)
+	// }
+	// defer logFile.Close()
+	// log.SetOutput(logFile)
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	input := scanner.Text()
