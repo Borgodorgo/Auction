@@ -7,6 +7,8 @@ To run the program:
 - enter :5001
 - in a second terminal use command go run Server.go
 - enter :5002
+
+
 To start the Bidders:
 - navigate to Auction/src/Auction/Bidder
 - use command go run Bidder.go
