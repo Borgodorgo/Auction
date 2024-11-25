@@ -185,7 +185,7 @@ func (n *P2PNode) HeartBeating() {
 			}
 			time.Sleep(1 * time.Second)
 			n.countdown++
-			if n.countdown > 100 {
+			if n.countdown > 10 {
 				n.active = false
 				n.stopAuction()
 			}
@@ -197,7 +197,7 @@ func (n *P2PNode) stopAuction() {
 	for address := range n.peers {
 		if address != "localhost"+n.address {
 			if peer, exists := n.peers[address]; exists {
-				_, err := peer.EndAuction(context.Background(), rs.NewBid{
+				_, err := peer.EndAuction(context.Background(), &rs.NewBid{
 					Amount:    n.Highest_Bid,
 					Bidderid:  n.Highest_BidderId,
 					Timestamp: n.Highest_Timestamp,
