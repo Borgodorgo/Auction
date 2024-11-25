@@ -18,6 +18,7 @@ message Ack {
 
 message Outcome {
     int64 amount = 1;
+    bool isOngoing = 2;
 }
 
 // Auction
