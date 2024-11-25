@@ -1,11 +1,13 @@
 package main
 
 import (
-	as "Replication/m/v2/AuctionService"
-	rs "Replication/m/v2/ReplicationService"
+	as "Replication/AuctionService"
+	rs "Replication/ReplicationService"
+	"bufio"
 	"context"
 	"log"
 	"net"
+	"os"
 	"sync"
 	"time"
 
@@ -29,6 +31,7 @@ type P2PNode struct {
 	active            bool
 	counter           int
 	address           string
+	countdown         int
 }
 
 // Takes a bid from a bidder
@@ -171,14 +174,21 @@ func (n *P2PNode) HeartBeating() {
 		if n.active {
 			log.Println("Heartbeat")
 			for address := range n.peers {
-				if peer, exists := n.peers[address]; exists {
-					_, err := peer.HeartBeat(context.Background(), &emptypb.Empty{})
-					if err != nil {
-						log.Printf("Error sending message: %v", err)
+				if address != "localhost"+n.address {
+					if peer, exists := n.peers[address]; exists {
+						_, err := peer.HeartBeat(context.Background(), &emptypb.Empty{})
+						if err != nil {
+							log.Printf("Error sending message: %v", err)
+						}
 					}
 				}
 			}
 			time.Sleep(1 * time.Second)
+			n.countdown++
+			if n.countdown > 100 {
+				//n.active = false
+				//stopAuction()
+			}
 		}
 	}
 }
@@ -194,7 +204,10 @@ func (n *P2PNode) Election() {
 				Address: n.address,
 			})
 			if err != nil {
+				log.Print("Heartbeat failed")
 				log.Printf("Error sending message: %v", err)
+				delete(n.peers, address)
+				break
 			}
 			if ack.Ack {
 				counter--
@@ -216,7 +229,7 @@ func createServer(node *P2PNode, address string, leader bool) {
 
 	node.IsLeader = leader
 	node.address = address
-	lis, err := net.Listen("tcp", address)
+	lis, err := net.Listen("tcp", "localhost"+address)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
@@ -256,49 +269,69 @@ func (n *P2PNode) Crash() {
 func (n *P2PNode) PeerSetup() {
 	n.peerPorts[0] = ":5001"
 	n.peerPorts[1] = ":5002"
-	n.peerPorts[2] = ":5003"
-	n.peerPorts[3] = ":5004"
-	n.peerPorts[4] = ":5005"
+	// n.peerPorts[2] = ":5003"
+	// n.peerPorts[3] = ":5004"
+	// n.peerPorts[4] = ":5005"
 
-	for i := 0; i < 5; i++ {
-		address := "localhost" + n.peerPorts[i]
-		conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
-		if err != nil {
-			log.Printf("Failed to connect to peer %s: %v", address, err)
-			return
+	for i := 0; i < len(n.peerPorts); i++ {
+		if n.address != n.peerPorts[i] {
+			address := "localhost" + n.peerPorts[i]
+			conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+			if err != nil {
+				log.Printf("Failed to connect to peer %s: %v", address, err)
+				return
+			}
+
+			client := rs.NewReplicationServiceClient(conn)
+
+			if i == 0 {
+				n.leader = client
+			}
+			n.peerLock.Lock()
+			n.peers[address] = client
+			n.peerLock.Unlock()
 		}
-
-		client := rs.NewReplicationServiceClient(conn)
-
-		if i == 0 {
-			n.leader = client
-		}
-		n.peerLock.Lock()
-		n.peers[address] = client
-		n.peerLock.Unlock()
-
 	}
 }
 
 func (n *P2PNode) startServer() {
+	for {
+		log.Printf("Counter: %d", n.counter)
+		n.counter++
+		if n.counter > 5 && n.address == ":5002" {
+			n.Election()
+			break
 
-	if n.IsLeader {
-		log.Print("Leader starting heartbeat")
-		go n.HeartBeating()
+		}
+		time.Sleep(1 * time.Second)
+	}
+}
+
+func (n *P2PNode) startLeader() {
+	log.Print("Leader starting heartbeat")
+	go n.HeartBeating()
+}
+
+func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	input := scanner.Text()
+	leader := false
+	if input == ":5001" {
+		log.Println("Leader")
+		leader = true
+	}
+	node := CreateNode()
+	node.PeerSetup()
+	go createServer(node, input, leader)
+
+	if leader {
+		node.startLeader()
+	} else {
+		node.startServer()
 	}
 
-	if !n.IsLeader {
-		go func() {
-			for {
-				log.Printf("Counter: %d", n.counter)
-				n.counter++
-				if n.counter > 5 && n.address == ":5002" {
-					n.Election()
-					break
-
-				}
-				time.Sleep(1 * time.Second)
-			}
-		}()
+	for {
+		time.Sleep(time.Second)
 	}
 }

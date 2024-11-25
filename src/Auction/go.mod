@@ -1,4 +1,4 @@
-module Replication/m/v2
+module Replication
 
 go 1.23.0
 
