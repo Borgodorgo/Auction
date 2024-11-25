@@ -19,6 +19,8 @@ type Bidder struct {
 	MyLatestBid    int64
 	Id             int64
 	nodes          []string
+	isOngoing      bool
+	randomNumber   int64
 }
 
 func (bidder *Bidder) Bid(amount int64) {
@@ -53,7 +55,11 @@ func (bidder *Bidder) Status() {
 		log.Printf("Failed to get auction status: %v", err)
 		bidder.FindNode()
 		return
-		//bidder.Status()
+	}
+	if !auctionStatus.IsOngoing {
+		log.Printf("Bidder %d sees auction ended at %d", bidder.Id, auctionStatus.Amount)
+		bidder.isOngoing = false
+		return
 	}
 
 	if auctionStatus.Amount != bidder.MyLatestBid {
@@ -67,6 +73,10 @@ func (bidder *Bidder) Status() {
 func (bidder *Bidder) FindNode() {
 	for {
 		randomNumber := rand.Int64N(2)
+		if bidder.randomNumber == randomNumber {
+			bidder.randomNumber = (bidder.randomNumber + 1) % 2
+		}
+		bidder.randomNumber = randomNumber
 		address := "localhost:" + bidder.nodes[randomNumber]
 		log.Print(randomNumber)
 		log.Print(address)
@@ -87,11 +97,15 @@ func start() {
 	bidder := Bidder{
 		nodes:       []string{"5001", "5002", "5003", "5004", "5005"},
 		MyLatestBid: -1,
+		isOngoing:   true,
 	}
 
 	bidder.FindNode()
 
 	for {
+		if !bidder.isOngoing {
+			break
+		}
 		bidder.Status()
 		time.Sleep(4 * time.Second)
 	}

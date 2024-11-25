@@ -92,7 +92,8 @@ func (n *P2PNode) CheckBidValidity(bid *rs.NewBid) (valid bool) {
 
 func (n *P2PNode) Result(ctx context.Context, empty *emptypb.Empty) (result *as.Outcome, err error) {
 	return &as.Outcome{
-		Amount: n.Highest_Bid,
+		Amount:    n.Highest_Bid,
+		IsOngoing: n.active,
 	}, err
 }
 
@@ -189,7 +190,7 @@ func (n *P2PNode) HeartBeating() {
 			time.Sleep(1 * time.Second)
 			n.countdown++
 			log.Printf("Countdown: %d", n.countdown)
-			if n.countdown > 15 {
+			if n.countdown > 25 {
 				log.Print("Auction ended")
 				n.active = false
 				n.stopAuction()
@@ -347,12 +348,12 @@ func (n *P2PNode) startLeader() {
 }
 
 func main() {
-	// logFile, err := os.OpenFile("../Server-log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	// if err != nil {
-	// 	log.Fatalf("Failed to open log file: %v", err)
-	// }
-	// defer logFile.Close()
-	// log.SetOutput(logFile)
+	logFile, err := os.OpenFile("../Server-log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Failed to open log file: %v", err)
+	}
+	defer logFile.Close()
+	log.SetOutput(logFile)
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	input := scanner.Text()
