@@ -4,6 +4,7 @@ import (
 	as "Replication/m/v2/AuctionService"
 	"context"
 	"log"
+	"math/rand/v2"
 	"time"
 
 	"google.golang.org/grpc"
@@ -20,23 +21,29 @@ type Bidder struct {
 }
 
 func (bidder *Bidder) Bid(amount int64) {
-	log.Printf("Bidding %d", amount)
-
-	result, _ := bidder.AuctionContact.Bid(context.Background(), &as.Amount{
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+	result, err := bidder.AuctionContact.Bid(ctx, &as.Amount{
 		Amount:   amount,
 		Bidderid: bidder.Id,
 	})
 
-	if !result.Ack {
-		bidder.MyLatestBid += 40
-		bidder.AuctionContact.Bid(context.Background(), &as.Amount{
-			Amount:   bidder.MyLatestBid,
-			Bidderid: bidder.Id,
-		})
+	if err != nil {
+		log.Printf("Failed to bid: %v", err)
+		bidder.FindNode()
+		if ctx.Err() == context.DeadlineExceeded {
+			log.Printf("Deadline exceeded")
+		}
+		return
 	}
-
-	time.Sleep(1 * time.Second)
-
+	if !result.Ack {
+		bidder.Id = result.Bidderid
+		log.Printf("Bid failed")
+		return
+	}
+	bidder.Id = result.Bidderid
+	bidder.MyLatestBid = amount
+	log.Printf("Bid successful")
 }
 
 func (bidder *Bidder) Status() {
@@ -49,15 +56,15 @@ func (bidder *Bidder) Status() {
 
 	if auctionStatus.Amount != bidder.MyLatestBid {
 		log.Printf("Auction status: %d", auctionStatus.Amount)
-		bidder.MyLatestBid = auctionStatus.Amount + 10
-		bidder.Bid(bidder.MyLatestBid)
+		newBid := auctionStatus.Amount + 10
+		bidder.Bid(newBid)
+
 	}
 }
 
 func (bidder *Bidder) FindNode() {
 	for {
-		//randomNumber := rand.Int64N(4)
-		randomNumber := 0
+		randomNumber := rand.Int64N(4)
 		address := "localhost:" + bidder.nodes[randomNumber]
 		log.Print(randomNumber)
 		log.Print(address)
@@ -81,8 +88,9 @@ func start() {
 	}
 
 	bidder.FindNode()
-	log.Print("Found node")
+
 	for {
 		bidder.Status()
+		time.Sleep(4 * time.Second)
 	}
 }
