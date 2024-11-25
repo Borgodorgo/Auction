@@ -1,370 +1,280 @@
-2024/11/25 16:33:15 Leader
-2024/11/25 16:33:15 Leader starting heartbeat
-2024/11/25 16:33:15 Heartbeat
-2024/11/25 16:33:15 P2P node is running on port :5001/n
-2024/11/25 16:33:15 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
-2024/11/25 16:33:15 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:16 Heartbeat
-2024/11/25 16:33:16 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
-2024/11/25 16:33:16 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:17 Heartbeat
-2024/11/25 16:33:17 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
-2024/11/25 16:33:17 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:18 Heartbeat
-2024/11/25 16:33:18 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
-2024/11/25 16:33:18 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:19 Heartbeat
-2024/11/25 16:33:19 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
-2024/11/25 16:33:19 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:19 Counter: 0
-2024/11/25 16:33:19 P2P node is running on port :5002/n
-2024/11/25 16:33:20 Heartbeat
-2024/11/25 16:33:20 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:20 Counter: 0
-2024/11/25 16:33:21 Heartbeat
-2024/11/25 16:33:21 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:21 Counter: 0
-2024/11/25 16:33:22 Heartbeat
-2024/11/25 16:33:22 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:22 Counter: 0
-2024/11/25 16:33:23 Heartbeat
-2024/11/25 16:33:23 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:23 Counter: 0
-2024/11/25 16:33:24 Heartbeat
-2024/11/25 16:33:24 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:24 Counter: 0
-2024/11/25 16:33:24 P2P node is running on port :5003/n
-2024/11/25 16:33:24 Counter: 0
-2024/11/25 16:33:25 Heartbeat
-2024/11/25 16:33:25 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:25 Counter: 1
-2024/11/25 16:33:25 Counter: 0
-2024/11/25 16:33:26 Heartbeat
-2024/11/25 16:33:26 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:26 Counter: 2
-2024/11/25 16:33:26 Counter: 0
-2024/11/25 16:33:27 Heartbeat
-2024/11/25 16:33:27 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:27 Counter: 3
-2024/11/25 16:33:27 Counter: 0
-2024/11/25 16:33:28 Heartbeat
-2024/11/25 16:33:28 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:28 Counter: 4
-2024/11/25 16:33:28 1
-2024/11/25 16:33:28 localhost:5002
-2024/11/25 16:33:28 Connected to node localhost:5002
-2024/11/25 16:33:28 Auction status: 0
-2024/11/25 16:33:28 Server :5002 propagating to leader
-2024/11/25 16:33:28 Leader received bid from 0
-2024/11/25 16:33:28 Checking bid validity Bid: 10 Highest: 0
-2024/11/25 16:33:28 Counter: 0
-2024/11/25 16:33:29 Heartbeat
-2024/11/25 16:33:29 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:29 Counter: 5
-2024/11/25 16:33:29 0
-2024/11/25 16:33:29 localhost:5001
-2024/11/25 16:33:29 Connected to node localhost:5001
-2024/11/25 16:33:29 Failed to bid: rpc error: code = DeadlineExceeded desc = context deadline exceeded
-2024/11/25 16:33:29 1
-2024/11/25 16:33:29 localhost:5002
-2024/11/25 16:33:29 Error sending message: rpc error: code = DeadlineExceeded desc = context deadline exceeded
-2024/11/25 16:33:29 Connected to node localhost:5002
-2024/11/25 16:33:29 Deadline exceeded
-2024/11/25 16:33:29 Auction status: 10
-2024/11/25 16:33:29 Checking bid validity Bid: 20 Highest: 10
-2024/11/25 16:33:29 Bidder 2 Successfully bidded 20
-2024/11/25 16:33:29 Counter: 0
-2024/11/25 16:33:30 Heartbeat
-2024/11/25 16:33:30 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5003: connect: connection refused"
-2024/11/25 16:33:30 Counter: 6
-2024/11/25 16:33:30 Failed to bid: rpc error: code = DeadlineExceeded desc = context deadline exceeded
-2024/11/25 16:33:30 0
-2024/11/25 16:33:30 localhost:5001
-2024/11/25 16:33:30 Connected to node localhost:5001
-2024/11/25 16:33:30 Deadline exceeded
-2024/11/25 16:33:30 Counter: 0
-2024/11/25 16:33:31 0
-2024/11/25 16:33:31 localhost:5001
-2024/11/25 16:33:31 Connected to node localhost:5001
-2024/11/25 16:33:31 Auction status: 20
-2024/11/25 16:33:31 Checking bid validity Bid: 30 Highest: 20
-2024/11/25 16:33:31 Bidder 3 Successfully bidded 30
-2024/11/25 16:33:31 Heartbeat
-2024/11/25 16:33:31 Counter: 0
-2024/11/25 16:33:31 Counter: 0
-2024/11/25 16:33:32 Failed to bid: rpc error: code = DeadlineExceeded desc = context deadline exceeded
-2024/11/25 16:33:32 1
-2024/11/25 16:33:32 localhost:5002
-2024/11/25 16:33:32 Connected to node localhost:5002
-2024/11/25 16:33:32 Deadline exceeded
-2024/11/25 16:33:32 Heartbeat
-2024/11/25 16:33:32 Counter: 0
-2024/11/25 16:33:32 Counter: 0
-2024/11/25 16:33:33 Heartbeat
-2024/11/25 16:33:33 Counter: 0
-2024/11/25 16:33:33 Auction status: 0
-2024/11/25 16:33:33 Server :5002 propagating to leader
-2024/11/25 16:33:33 Leader received bid from 0
-2024/11/25 16:33:33 Checking bid validity Bid: 10 Highest: 30
-2024/11/25 16:33:33 Bid failed
-2024/11/25 16:33:33 Follower :5001 received bid from 3
-2024/11/25 16:33:33 Follower :5001 received bid from 2
-2024/11/25 16:33:33 Follower :5001 received bid from 1
-2024/11/25 16:33:33 Follower :5002 received bid from 3
-2024/11/25 16:33:33 Follower :5002 received bid from 1
-2024/11/25 16:33:33 Follower :5002 received bid from 2
-2024/11/25 16:33:33 Follower :5003 received bid from 3
-2024/11/25 16:33:33 Follower :5003 received bid from 1
-2024/11/25 16:33:33 Follower :5003 received bid from 2
-2024/11/25 16:33:33 Counter: 0
-2024/11/25 16:33:34 Heartbeat
-2024/11/25 16:33:34 Counter: 0
-2024/11/25 16:33:34 Auction status: 10
-2024/11/25 16:33:34 Checking bid validity Bid: 20 Highest: 10
-2024/11/25 16:33:34 Bidder 2 Successfully bidded 20
-2024/11/25 16:33:34 Follower :5003 received bid from 2
-2024/11/25 16:33:34 Follower :5001 received bid from 2
-2024/11/25 16:33:34 Follower :5002 received bid from 2
-2024/11/25 16:33:34 Bid successful
-2024/11/25 16:33:34 Counter: 0
-2024/11/25 16:33:35 Heartbeat
-2024/11/25 16:33:35 Counter: 0
-2024/11/25 16:33:35 Counter: 0
-2024/11/25 16:33:36 Auction status: 20
-2024/11/25 16:33:36 Server :5002 propagating to leader
-2024/11/25 16:33:36 Leader received bid from 0
-2024/11/25 16:33:36 Checking bid validity Bid: 30 Highest: 20
-2024/11/25 16:33:36 Follower :5001 received bid from 3
-2024/11/25 16:33:36 Follower :5002 received bid from 3
-2024/11/25 16:33:36 Follower :5003 received bid from 3
-2024/11/25 16:33:36 Bid successful
-2024/11/25 16:33:36 Heartbeat
-2024/11/25 16:33:36 Counter: 0
-2024/11/25 16:33:36 Counter: 0
-2024/11/25 16:33:37 Heartbeat
-2024/11/25 16:33:37 Counter: 0
-2024/11/25 16:33:37 Auction status: 30
-2024/11/25 16:33:37 Server :5002 propagating to leader
-2024/11/25 16:33:37 Leader received bid from 0
-2024/11/25 16:33:37 Checking bid validity Bid: 40 Highest: 30
-2024/11/25 16:33:37 Follower :5001 received bid from 4
-2024/11/25 16:33:37 Follower :5002 received bid from 4
-2024/11/25 16:33:37 Follower :5003 received bid from 4
-2024/11/25 16:33:37 Bid successful
-2024/11/25 16:33:37 Counter: 0
-2024/11/25 16:33:38 Heartbeat
-2024/11/25 16:33:38 Counter: 0
-2024/11/25 16:33:38 Auction status: 40
-2024/11/25 16:33:38 Checking bid validity Bid: 50 Highest: 40
-2024/11/25 16:33:38 Bidder 2 Successfully bidded 50
-2024/11/25 16:33:38 Follower :5001 received bid from 2
-2024/11/25 16:33:38 Follower :5002 received bid from 2
-2024/11/25 16:33:38 Follower :5003 received bid from 2
-2024/11/25 16:33:38 Bid successful
-2024/11/25 16:33:38 Counter: 0
-2024/11/25 16:33:39 Heartbeat
-2024/11/25 16:33:39 Counter: 0
-2024/11/25 16:33:39 Counter: 0
-2024/11/25 16:33:40 Auction status: 50
-2024/11/25 16:33:40 Server :5002 propagating to leader
-2024/11/25 16:33:40 Leader received bid from 3
-2024/11/25 16:33:40 Checking bid validity Bid: 60 Highest: 50
-2024/11/25 16:33:40 Follower :5001 received bid from 3
-2024/11/25 16:33:40 Follower :5002 received bid from 3
-2024/11/25 16:33:40 Follower :5003 received bid from 3
-2024/11/25 16:33:40 Bid successful
-2024/11/25 16:33:40 Heartbeat
-2024/11/25 16:33:40 Counter: 0
-2024/11/25 16:33:40 Counter: 0
-2024/11/25 16:33:41 Heartbeat
-2024/11/25 16:33:41 Counter: 0
-2024/11/25 16:33:41 Auction status: 60
-2024/11/25 16:33:41 Server :5002 propagating to leader
-2024/11/25 16:33:41 Leader received bid from 4
-2024/11/25 16:33:41 Checking bid validity Bid: 70 Highest: 60
-2024/11/25 16:33:41 Follower :5001 received bid from 4
-2024/11/25 16:33:41 Follower :5002 received bid from 4
-2024/11/25 16:33:41 Follower :5003 received bid from 4
-2024/11/25 16:33:41 Bid successful
-2024/11/25 16:33:41 Counter: 0
-2024/11/25 16:33:42 Counter: 1
-2024/11/25 16:33:42 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
-2024/11/25 16:33:42 0
-2024/11/25 16:33:42 localhost:5001
-2024/11/25 16:33:42 Connected to node localhost:5001
-2024/11/25 16:33:42 Counter: 1
-2024/11/25 16:33:43 Counter: 2
-2024/11/25 16:33:43 Counter: 2
-2024/11/25 16:33:44 Auction status: 70
-2024/11/25 16:33:44 Server :5002 propagating to leader
-2024/11/25 16:33:44 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
-2024/11/25 16:33:44 Bid failed
-2024/11/25 16:33:44 Counter: 3
-2024/11/25 16:33:44 Counter: 3
-2024/11/25 16:33:45 Counter: 4
-2024/11/25 16:33:45 Counter: 4
-2024/11/25 16:33:46 Counter: 5
-2024/11/25 16:33:46 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
-2024/11/25 16:33:46 0
-2024/11/25 16:33:46 localhost:5001
-2024/11/25 16:33:46 Connected to node localhost:5001
-2024/11/25 16:33:46 Counter: 5
-2024/11/25 16:33:46 Election time
-2024/11/25 16:33:46 Heartbeat failed
-2024/11/25 16:33:46 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
-2024/11/25 16:33:46 Heartbeat
-2024/11/25 16:33:47 Counter: 0
-2024/11/25 16:33:47 Heartbeat
-2024/11/25 16:33:48 Auction status: 70
-2024/11/25 16:33:48 Checking bid validity Bid: 80 Highest: 70
-2024/11/25 16:33:48 Bidder 3 Successfully bidded 80
-2024/11/25 16:33:48 Follower :5002 received bid from 3
-2024/11/25 16:33:48 Follower :5003 received bid from 3
-2024/11/25 16:33:48 Bid successful
-2024/11/25 16:33:48 Counter: 0
-2024/11/25 16:33:48 Heartbeat
-2024/11/25 16:33:49 Auction status: 80
-2024/11/25 16:33:49 Checking bid validity Bid: 90 Highest: 80
-2024/11/25 16:33:49 Bidder 4 Successfully bidded 90
-2024/11/25 16:33:49 Follower :5002 received bid from 4
-2024/11/25 16:33:49 Follower :5003 received bid from 4
-2024/11/25 16:33:49 Bid successful
-2024/11/25 16:33:49 Counter: 0
-2024/11/25 16:33:49 Heartbeat
-2024/11/25 16:33:50 Counter: 0
-2024/11/25 16:33:50 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
-2024/11/25 16:33:50 1
-2024/11/25 16:33:50 localhost:5002
-2024/11/25 16:33:50 Connected to node localhost:5002
-2024/11/25 16:33:50 Heartbeat
-2024/11/25 16:33:51 Counter: 0
-2024/11/25 16:33:51 Heartbeat
-2024/11/25 16:33:52 Auction status: 90
-2024/11/25 16:33:52 Checking bid validity Bid: 100 Highest: 90
-2024/11/25 16:33:52 Bidder 3 Successfully bidded 100
-2024/11/25 16:33:52 Follower :5002 received bid from 3
-2024/11/25 16:33:52 Follower :5003 received bid from 3
-2024/11/25 16:33:52 Bid successful
-2024/11/25 16:33:52 Counter: 0
-2024/11/25 16:33:52 Heartbeat
-2024/11/25 16:33:53 Auction status: 100
-2024/11/25 16:33:53 Checking bid validity Bid: 110 Highest: 100
-2024/11/25 16:33:53 Bidder 4 Successfully bidded 110
-2024/11/25 16:33:53 Follower :5002 received bid from 4
-2024/11/25 16:33:53 Follower :5003 received bid from 4
-2024/11/25 16:33:53 Bid successful
-2024/11/25 16:33:53 Counter: 0
-2024/11/25 16:33:53 Heartbeat
-2024/11/25 16:33:54 Counter: 0
-2024/11/25 16:33:54 Auction status: 110
-2024/11/25 16:33:54 Checking bid validity Bid: 120 Highest: 110
-2024/11/25 16:33:54 Bidder 2 Successfully bidded 120
-2024/11/25 16:33:54 Follower :5002 received bid from 2
-2024/11/25 16:33:54 Follower :5003 received bid from 2
-2024/11/25 16:33:54 Bid successful
-2024/11/25 16:33:54 Heartbeat
-2024/11/25 16:33:55 Counter: 0
-2024/11/25 16:33:55 Heartbeat
-2024/11/25 16:33:56 Auction status: 120
-2024/11/25 16:33:56 Checking bid validity Bid: 130 Highest: 120
-2024/11/25 16:33:56 Bidder 3 Successfully bidded 130
-2024/11/25 16:33:56 Follower :5002 received bid from 3
-2024/11/25 16:33:56 Follower :5003 received bid from 3
-2024/11/25 16:33:56 Bid successful
-2024/11/25 16:33:56 Counter: 0
-2024/11/25 16:33:56 Heartbeat
-2024/11/25 16:33:57 Auction status: 130
-2024/11/25 16:33:57 Checking bid validity Bid: 140 Highest: 130
-2024/11/25 16:33:57 Bidder 4 Successfully bidded 140
-2024/11/25 16:33:57 Follower :5003 received bid from 4
-2024/11/25 16:33:57 Follower :5002 received bid from 4
-2024/11/25 16:33:57 Bid successful
-2024/11/25 16:33:57 Counter: 0
-2024/11/25 16:33:57 Heartbeat
-2024/11/25 16:33:58 Counter: 0
-2024/11/25 16:33:58 Auction status: 140
-2024/11/25 16:33:58 Checking bid validity Bid: 150 Highest: 140
-2024/11/25 16:33:58 Bidder 2 Successfully bidded 150
-2024/11/25 16:33:58 Follower :5002 received bid from 2
-2024/11/25 16:33:58 Follower :5003 received bid from 2
-2024/11/25 16:33:58 Bid successful
-2024/11/25 16:33:58 Heartbeat
-2024/11/25 16:33:59 Counter: 0
-2024/11/25 16:33:59 Heartbeat
-2024/11/25 16:34:00 Auction status: 150
-2024/11/25 16:34:00 Checking bid validity Bid: 160 Highest: 150
-2024/11/25 16:34:00 Bidder 3 Successfully bidded 160
-2024/11/25 16:34:00 Follower :5002 received bid from 3
-2024/11/25 16:34:00 Follower :5003 received bid from 3
-2024/11/25 16:34:00 Bid successful
-2024/11/25 16:34:00 Counter: 0
-2024/11/25 16:34:00 Heartbeat
-2024/11/25 16:34:01 Auction status: 160
-2024/11/25 16:34:01 Checking bid validity Bid: 170 Highest: 160
-2024/11/25 16:34:01 Bidder 4 Successfully bidded 170
-2024/11/25 16:34:01 Follower :5002 received bid from 4
-2024/11/25 16:34:01 Follower :5003 received bid from 4
-2024/11/25 16:34:01 Bid successful
-2024/11/25 16:34:01 Counter: 0
-2024/11/25 16:34:01 Heartbeat
-2024/11/25 16:34:02 Counter: 0
-2024/11/25 16:34:02 Auction status: 170
-2024/11/25 16:34:02 Checking bid validity Bid: 180 Highest: 170
-2024/11/25 16:34:02 Bidder 2 Successfully bidded 180
-2024/11/25 16:34:02 Follower :5002 received bid from 2
-2024/11/25 16:34:02 Follower :5003 received bid from 2
-2024/11/25 16:34:02 Bid successful
-2024/11/25 16:34:02 Heartbeat
-2024/11/25 16:34:03 Counter: 0
-2024/11/25 16:34:03 Heartbeat
-2024/11/25 16:34:04 Auction status: 180
-2024/11/25 16:34:04 Checking bid validity Bid: 190 Highest: 180
-2024/11/25 16:34:04 Bidder 3 Successfully bidded 190
-2024/11/25 16:34:04 Follower :5003 received bid from 3
-2024/11/25 16:34:04 Follower :5002 received bid from 3
-2024/11/25 16:34:04 Bid successful
-2024/11/25 16:34:04 Counter: 0
-2024/11/25 16:34:04 Heartbeat
-2024/11/25 16:34:05 Auction status: 190
-2024/11/25 16:34:05 Checking bid validity Bid: 200 Highest: 190
-2024/11/25 16:34:05 Bidder 4 Successfully bidded 200
-2024/11/25 16:34:05 Follower :5002 received bid from 4
-2024/11/25 16:34:05 Follower :5003 received bid from 4
-2024/11/25 16:34:05 Bid successful
-2024/11/25 16:34:05 Counter: 0
-2024/11/25 16:34:05 Heartbeat
-2024/11/25 16:34:06 Counter: 0
-2024/11/25 16:34:06 Auction status: 200
-2024/11/25 16:34:06 Checking bid validity Bid: 210 Highest: 200
-2024/11/25 16:34:06 Bidder 2 Successfully bidded 210
-2024/11/25 16:34:06 Follower :5002 received bid from 2
-2024/11/25 16:34:06 Follower :5003 received bid from 2
-2024/11/25 16:34:06 Bid successful
-2024/11/25 16:34:06 Heartbeat
-2024/11/25 16:34:07 Counter: 0
-2024/11/25 16:34:07 Heartbeat
-2024/11/25 16:34:08 Auction status: 210
-2024/11/25 16:34:08 Checking bid validity Bid: 220 Highest: 210
-2024/11/25 16:34:08 Bidder 3 Successfully bidded 220
-2024/11/25 16:34:08 Follower :5002 received bid from 3
-2024/11/25 16:34:08 Follower :5003 received bid from 3
-2024/11/25 16:34:08 Bid successful
-2024/11/25 16:34:08 Counter: 0
-2024/11/25 16:34:08 Heartbeat
-2024/11/25 16:34:09 Auction status: 220
-2024/11/25 16:34:09 Checking bid validity Bid: 230 Highest: 220
-2024/11/25 16:34:09 Bidder 4 Successfully bidded 230
-2024/11/25 16:34:09 Follower :5002 received bid from 4
-2024/11/25 16:34:09 Follower :5003 received bid from 4
-2024/11/25 16:34:09 Bid successful
-2024/11/25 16:34:09 Counter: 0
-2024/11/25 16:34:09 Heartbeat
-2024/11/25 16:34:10 Counter: 0
-2024/11/25 16:34:10 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
-2024/11/25 16:34:10 1
-2024/11/25 16:34:10 localhost:5002
-2024/11/25 16:34:10 Connected to node localhost:5002
-2024/11/25 16:34:12 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
-2024/11/25 16:34:12 1
-2024/11/25 16:34:12 localhost:5002
-2024/11/25 16:34:12 Connected to node localhost:5002
+2024/11/25 17:04:52 Leader
+2024/11/25 17:04:52 Leader starting heartbeat
+2024/11/25 17:04:52 Heartbeat
+2024/11/25 17:04:52 P2P node is running on port :5001/n
+2024/11/25 17:04:52 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
+2024/11/25 17:04:53 Countdown: 1
+2024/11/25 17:04:53 Heartbeat
+2024/11/25 17:04:53 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
+2024/11/25 17:04:54 Counter: 0
+2024/11/25 17:04:54 P2P node is running on port :5002/n
+2024/11/25 17:04:54 Countdown: 2
+2024/11/25 17:04:54 Heartbeat
+2024/11/25 17:04:54 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
+2024/11/25 17:04:55 Counter: 1
+2024/11/25 17:04:55 Countdown: 3
+2024/11/25 17:04:55 Heartbeat
+2024/11/25 17:04:56 Counter: 0
+2024/11/25 17:04:56 Countdown: 4
+2024/11/25 17:04:56 Heartbeat
+2024/11/25 17:04:57 Counter: 0
+2024/11/25 17:04:57 Countdown: 5
+2024/11/25 17:04:57 Heartbeat
+2024/11/25 17:04:58 0
+2024/11/25 17:04:58 localhost:5001
+2024/11/25 17:04:58 Connected to node localhost:5001
+2024/11/25 17:04:58 Auction status: 0
+2024/11/25 17:04:58 Checking bid validity Bid: 10 Highest: 0
+2024/11/25 17:04:58 Bidder 1 Successfully bidded 10
+2024/11/25 17:04:58 Follower :5001 received bid from 1
+2024/11/25 17:04:58 Follower :5002 received bid from 1
+2024/11/25 17:04:58 Bid successful
+2024/11/25 17:04:58 Counter: 0
+2024/11/25 17:04:58 Countdown: 6
+2024/11/25 17:04:58 Heartbeat
+2024/11/25 17:04:59 1
+2024/11/25 17:04:59 localhost:5002
+2024/11/25 17:04:59 Connected to node localhost:5002
+2024/11/25 17:04:59 Auction status: 10
+2024/11/25 17:04:59 Server :5002 propagating to leader
+2024/11/25 17:04:59 Leader received bid from 0
+2024/11/25 17:04:59 Checking bid validity Bid: 20 Highest: 10
+2024/11/25 17:04:59 Follower :5002 received bid from 2
+2024/11/25 17:04:59 Follower :5001 received bid from 2
+2024/11/25 17:04:59 Bid successful
+2024/11/25 17:04:59 Counter: 0
+2024/11/25 17:04:59 Countdown: 7
+2024/11/25 17:04:59 Heartbeat
+2024/11/25 17:05:00 1
+2024/11/25 17:05:00 localhost:5002
+2024/11/25 17:05:00 Connected to node localhost:5002
+2024/11/25 17:05:00 Auction status: 20
+2024/11/25 17:05:00 Server :5002 propagating to leader
+2024/11/25 17:05:00 Leader received bid from 0
+2024/11/25 17:05:00 Checking bid validity Bid: 30 Highest: 20
+2024/11/25 17:05:00 Follower :5001 received bid from 3
+2024/11/25 17:05:00 Follower :5002 received bid from 3
+2024/11/25 17:05:00 Bid successful
+2024/11/25 17:05:00 Counter: 0
+2024/11/25 17:05:00 Countdown: 8
+2024/11/25 17:05:00 Heartbeat
+2024/11/25 17:05:01 Counter: 0
+2024/11/25 17:05:01 Countdown: 9
+2024/11/25 17:05:01 Heartbeat
+2024/11/25 17:05:02 Auction status: 30
+2024/11/25 17:05:02 Checking bid validity Bid: 40 Highest: 30
+2024/11/25 17:05:02 Bidder 1 Successfully bidded 40
+2024/11/25 17:05:02 Follower :5001 received bid from 1
+2024/11/25 17:05:02 Follower :5002 received bid from 1
+2024/11/25 17:05:02 Bid successful
+2024/11/25 17:05:02 Counter: 0
+2024/11/25 17:05:02 Countdown: 10
+2024/11/25 17:05:02 Heartbeat
+2024/11/25 17:05:03 Auction status: 40
+2024/11/25 17:05:03 Server :5002 propagating to leader
+2024/11/25 17:05:03 Leader received bid from 2
+2024/11/25 17:05:03 Checking bid validity Bid: 50 Highest: 40
+2024/11/25 17:05:03 Follower :5002 received bid from 2
+2024/11/25 17:05:03 Follower :5001 received bid from 2
+2024/11/25 17:05:03 Bid successful
+2024/11/25 17:05:03 Counter: 0
+2024/11/25 17:05:03 Countdown: 11
+2024/11/25 17:05:03 Heartbeat
+2024/11/25 17:05:04 Auction status: 50
+2024/11/25 17:05:04 Server :5002 propagating to leader
+2024/11/25 17:05:04 Leader received bid from 3
+2024/11/25 17:05:04 Checking bid validity Bid: 60 Highest: 50
+2024/11/25 17:05:04 Follower :5001 received bid from 3
+2024/11/25 17:05:04 Follower :5002 received bid from 3
+2024/11/25 17:05:04 Bid successful
+2024/11/25 17:05:04 Counter: 0
+2024/11/25 17:05:04 Countdown: 12
+2024/11/25 17:05:04 Heartbeat
+2024/11/25 17:05:05 Counter: 0
+2024/11/25 17:05:05 Countdown: 13
+2024/11/25 17:05:05 Heartbeat
+2024/11/25 17:05:06 Auction status: 60
+2024/11/25 17:05:06 Checking bid validity Bid: 70 Highest: 60
+2024/11/25 17:05:06 Bidder 1 Successfully bidded 70
+2024/11/25 17:05:06 Follower :5002 received bid from 1
+2024/11/25 17:05:06 Follower :5001 received bid from 1
+2024/11/25 17:05:06 Bid successful
+2024/11/25 17:05:06 Counter: 0
+2024/11/25 17:05:06 Countdown: 14
+2024/11/25 17:05:06 Heartbeat
+2024/11/25 17:05:07 Auction status: 70
+2024/11/25 17:05:07 Server :5002 propagating to leader
+2024/11/25 17:05:07 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:05:07 Bid failed
+2024/11/25 17:05:07 Counter: 0
+2024/11/25 17:05:08 Auction status: 70
+2024/11/25 17:05:08 Server :5002 propagating to leader
+2024/11/25 17:05:08 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:05:08 Bid failed
+2024/11/25 17:05:08 Counter: 1
+2024/11/25 17:05:09 Counter: 2
+2024/11/25 17:05:10 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:05:10 0
+2024/11/25 17:05:10 localhost:5001
+2024/11/25 17:05:10 Connected to node localhost:5001
+2024/11/25 17:05:10 Counter: 3
+2024/11/25 17:05:11 Auction status: 70
+2024/11/25 17:05:11 Server :5002 propagating to leader
+2024/11/25 17:05:11 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:05:11 Bid failed
+2024/11/25 17:05:11 Counter: 4
+2024/11/25 17:05:12 Auction status: 70
+2024/11/25 17:05:12 Server :5002 propagating to leader
+2024/11/25 17:05:12 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:05:12 Bid failed
+2024/11/25 17:05:12 Counter: 5
+2024/11/25 17:05:12 Election time
+2024/11/25 17:05:12 Heartbeat failed
+2024/11/25 17:05:12 Error sending message: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:05:12 Heartbeat
+2024/11/25 17:05:13 Countdown: 20
+2024/11/25 17:05:13 Heartbeat
+2024/11/25 17:05:14 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:05:14 1
+2024/11/25 17:05:14 localhost:5002
+2024/11/25 17:05:14 Connected to node localhost:5002
+2024/11/25 17:05:14 Countdown: 21
+2024/11/25 17:05:14 Heartbeat
+2024/11/25 17:05:15 Auction status: 70
+2024/11/25 17:05:15 Checking bid validity Bid: 80 Highest: 70
+2024/11/25 17:05:15 Bidder 2 Successfully bidded 80
+2024/11/25 17:05:15 Follower :5002 received bid from 2
+2024/11/25 17:05:15 Bid successful
+2024/11/25 17:05:15 Countdown: 22
+2024/11/25 17:05:15 Heartbeat
+2024/11/25 17:05:16 Auction status: 80
+2024/11/25 17:05:16 Checking bid validity Bid: 90 Highest: 80
+2024/11/25 17:05:16 Bidder 3 Successfully bidded 90
+2024/11/25 17:05:16 Follower :5002 received bid from 3
+2024/11/25 17:05:16 Bid successful
+2024/11/25 17:05:16 Countdown: 23
+2024/11/25 17:05:16 Heartbeat
+2024/11/25 17:05:17 Countdown: 24
+2024/11/25 17:05:17 Heartbeat
+2024/11/25 17:05:18 Auction status: 90
+2024/11/25 17:05:18 Checking bid validity Bid: 100 Highest: 90
+2024/11/25 17:05:18 Bidder 1 Successfully bidded 100
+2024/11/25 17:05:18 Follower :5002 received bid from 1
+2024/11/25 17:05:18 Bid successful
+2024/11/25 17:05:18 Countdown: 25
+2024/11/25 17:05:18 Heartbeat
+2024/11/25 17:05:19 Auction status: 100
+2024/11/25 17:05:19 Checking bid validity Bid: 110 Highest: 100
+2024/11/25 17:05:19 Bidder 2 Successfully bidded 110
+2024/11/25 17:05:19 Follower :5002 received bid from 2
+2024/11/25 17:05:19 Bid successful
+2024/11/25 17:05:19 Countdown: 26
+2024/11/25 17:05:19 Heartbeat
+2024/11/25 17:05:20 Auction status: 110
+2024/11/25 17:05:20 Checking bid validity Bid: 120 Highest: 110
+2024/11/25 17:05:20 Bidder 3 Successfully bidded 120
+2024/11/25 17:05:20 Follower :5002 received bid from 3
+2024/11/25 17:05:20 Bid successful
+2024/11/25 17:05:20 Countdown: 27
+2024/11/25 17:05:20 Heartbeat
+2024/11/25 17:05:21 Countdown: 28
+2024/11/25 17:05:21 Heartbeat
+2024/11/25 17:05:22 Auction status: 120
+2024/11/25 17:05:22 Checking bid validity Bid: 130 Highest: 120
+2024/11/25 17:05:22 Bidder 1 Successfully bidded 130
+2024/11/25 17:05:22 Follower :5002 received bid from 1
+2024/11/25 17:05:22 Bid successful
+2024/11/25 17:05:22 Countdown: 29
+2024/11/25 17:05:22 Heartbeat
+2024/11/25 17:05:23 Auction status: 130
+2024/11/25 17:05:23 Checking bid validity Bid: 140 Highest: 130
+2024/11/25 17:05:23 Bidder 2 Successfully bidded 140
+2024/11/25 17:05:23 Follower :5002 received bid from 2
+2024/11/25 17:05:23 Bid successful
+2024/11/25 17:05:23 Countdown: 30
+2024/11/25 17:05:23 Heartbeat
+2024/11/25 17:05:24 Auction status: 140
+2024/11/25 17:05:24 Checking bid validity Bid: 150 Highest: 140
+2024/11/25 17:05:24 Bidder 3 Successfully bidded 150
+2024/11/25 17:05:24 Follower :5002 received bid from 3
+2024/11/25 17:05:24 Bid successful
+2024/11/25 17:05:24 Countdown: 31
+2024/11/25 17:05:24 Auction ended
+2024/11/25 17:05:26 Auction status: 150
+2024/11/25 17:05:26 Checking bid validity Bid: 160 Highest: 150
+2024/11/25 17:05:26 Bidder 1 Successfully bidded 160
+2024/11/25 17:05:26 Follower :5002 received bid from 1
+2024/11/25 17:05:26 Bid successful
+2024/11/25 17:05:27 Auction status: 160
+2024/11/25 17:05:27 Checking bid validity Bid: 170 Highest: 160
+2024/11/25 17:05:27 Bidder 2 Successfully bidded 170
+2024/11/25 17:05:27 Follower :5002 received bid from 2
+2024/11/25 17:05:27 Bid successful
+2024/11/25 17:05:28 Auction status: 170
+2024/11/25 17:05:28 Checking bid validity Bid: 180 Highest: 170
+2024/11/25 17:05:28 Bidder 3 Successfully bidded 180
+2024/11/25 17:05:28 Follower :5002 received bid from 3
+2024/11/25 17:05:28 Bid successful
+2024/11/25 17:05:30 Auction status: 180
+2024/11/25 17:05:30 Checking bid validity Bid: 190 Highest: 180
+2024/11/25 17:05:30 Bidder 1 Successfully bidded 190
+2024/11/25 17:05:30 Follower :5002 received bid from 1
+2024/11/25 17:05:30 Bid successful
+2024/11/25 17:05:31 Auction status: 190
+2024/11/25 17:05:31 Checking bid validity Bid: 200 Highest: 190
+2024/11/25 17:05:31 Bidder 2 Successfully bidded 200
+2024/11/25 17:05:31 Follower :5002 received bid from 2
+2024/11/25 17:05:31 Bid successful
+2024/11/25 17:05:32 Auction status: 200
+2024/11/25 17:05:32 Checking bid validity Bid: 210 Highest: 200
+2024/11/25 17:05:32 Bidder 3 Successfully bidded 210
+2024/11/25 17:05:32 Follower :5002 received bid from 3
+2024/11/25 17:05:32 Bid successful
+2024/11/25 17:05:34 Auction status: 210
+2024/11/25 17:05:34 Checking bid validity Bid: 220 Highest: 210
+2024/11/25 17:05:34 Bidder 1 Successfully bidded 220
+2024/11/25 17:05:34 Follower :5002 received bid from 1
+2024/11/25 17:05:34 Bid successful
+2024/11/25 17:05:35 Auction status: 220
+2024/11/25 17:05:35 Checking bid validity Bid: 230 Highest: 220
+2024/11/25 17:05:35 Bidder 2 Successfully bidded 230
+2024/11/25 17:05:35 Follower :5002 received bid from 2
+2024/11/25 17:05:35 Bid successful
+2024/11/25 17:05:36 Auction status: 230
+2024/11/25 17:05:36 Checking bid validity Bid: 240 Highest: 230
+2024/11/25 17:05:36 Bidder 3 Successfully bidded 240
+2024/11/25 17:05:36 Follower :5002 received bid from 3
+2024/11/25 17:05:36 Bid successful
+2024/11/25 17:05:38 Auction status: 240
+2024/11/25 17:05:38 Checking bid validity Bid: 250 Highest: 240
+2024/11/25 17:05:38 Bidder 1 Successfully bidded 250
+2024/11/25 17:05:38 Follower :5002 received bid from 1
+2024/11/25 17:05:38 Bid successful
+2024/11/25 17:05:39 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
+2024/11/25 17:05:39 0
+2024/11/25 17:05:39 localhost:5001
+2024/11/25 17:05:39 Connected to node localhost:5001
+2024/11/25 17:05:40 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5002: connect: connection refused"
+2024/11/25 17:05:40 1
+2024/11/25 17:05:40 localhost:5002
+2024/11/25 17:05:40 Connected to node localhost:5002
+2024/11/25 17:08:39 0
+2024/11/25 17:08:39 localhost:5001
+2024/11/25 17:08:39 Connected to node localhost:5001
+2024/11/25 17:08:39 Auction status: 0
+2024/11/25 17:08:40 Bid successful
+2024/11/25 17:08:40 1
+2024/11/25 17:08:40 localhost:5002
+2024/11/25 17:08:40 Connected to node localhost:5002
+2024/11/25 17:08:40 Auction status: 10
+2024/11/25 17:08:40 Bid successful
+2024/11/25 17:08:44 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:08:44 0
+2024/11/25 17:08:44 localhost:5001
+2024/11/25 17:08:44 Connected to node localhost:5001
+2024/11/25 17:08:48 Failed to get auction status: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused"
+2024/11/25 17:08:48 1
+2024/11/25 17:08:48 localhost:5002
+2024/11/25 17:08:48 Connected to node localhost:5002
+2024/11/25 17:08:52 Auction status: 20
+2024/11/25 17:08:52 Bid failed
