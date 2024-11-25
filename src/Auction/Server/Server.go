@@ -186,11 +186,37 @@ func (n *P2PNode) HeartBeating() {
 			time.Sleep(1 * time.Second)
 			n.countdown++
 			if n.countdown > 100 {
-				//n.active = false
-				//stopAuction()
+				n.active = false
+				n.stopAuction()
 			}
 		}
 	}
+}
+
+func (n *P2PNode) stopAuction() {
+	for address := range n.peers {
+		if address != "localhost"+n.address {
+			if peer, exists := n.peers[address]; exists {
+				_, err := peer.EndAuction(context.Background(), rs.NewBid{
+					Amount:    n.Highest_Bid,
+					Bidderid:  n.Highest_BidderId,
+					Timestamp: n.Highest_Timestamp,
+				})
+				if err != nil {
+					log.Printf("Error sending message: %v", err)
+				}
+			}
+		}
+	}
+}
+
+func (n *P2PNode) EndAuction(ctx context.Context, bid *rs.NewBid) (empty *emptypb.Empty, err error) {
+	log.Printf("Auction ended with bid %d from %d", bid.Amount, bid.Bidderid)
+	n.Highest_Bid = bid.Amount
+	n.Highest_BidderId = bid.Bidderid
+	n.Highest_Timestamp = bid.Timestamp
+	n.active = false
+	return empty, err
 }
 
 func (n *P2PNode) Election() {
