@@ -1,7 +1,5 @@
 package main
 
-import "time"
-
 /*
 	func oldmain() {
 		node1 := CreateNode(0, 3)
@@ -39,37 +37,37 @@ import "time"
 		}
 	}
 */
-func main() {
-	nodes := make([]*P2PNode, 5)
-	for i := 0; i < 5; i++ {
-		nodes[i] = CreateNode()
-	}
+// func main() {
+// 	nodes := make([]*P2PNode, 5)
+// 	for i := 0; i < 5; i++ {
+// 		nodes[i] = CreateNode()
+// 	}
 
-	for i := 0; i < 5; i++ {
-		nodes[i].PeerSetup()
-	}
+// 	for i := 0; i < 5; i++ {
+// 		nodes[i].PeerSetup()
+// 	}
 
-	leader := true
-	for i := 0; i < 5; i++ {
+// 	leader := true
+// 	for i := 0; i < 5; i++ {
 
-		go createServer(nodes[i], nodes[i].peerPorts[i], leader)
-		leader = false
-	}
+// 		go createServer(nodes[i], nodes[i].peerPorts[i], leader)
+// 		leader = false
+// 	}
 
-	go nodes[0].startServer()
-	time.Sleep(1 * time.Second)
-	for i := 1; i < 5; i++ {
-		go nodes[i].startServer()
-	}
-	time.Sleep(3 * time.Second)
-	for i := 0; i < 5; i++ {
-		go start()
-	}
+// 	go nodes[0].startServer()
+// 	time.Sleep(1 * time.Second)
+// 	for i := 1; i < 5; i++ {
+// 		go nodes[i].startServer()
+// 	}
+// 	time.Sleep(3 * time.Second)
+// 	for i := 0; i < 5; i++ {
+// 		go start()
+// 	}
 
-	time.Sleep(5 * time.Second)
-	go nodes[0].Crash()
-	for {
-		time.Sleep(time.Second)
-	}
+// 	time.Sleep(5 * time.Second)
+// 	go nodes[0].Crash()
+// 	for {
+// 		time.Sleep(time.Second)
+// 	}
 
-}
+// }

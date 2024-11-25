@@ -1,8 +1,8 @@
 package main
 
 import (
-	as "Replication/m/v2/AuctionService"
-	rs "Replication/m/v2/ReplicationService"
+	as "Replication/AuctionService"
+	rs "Replication/ReplicationService"
 	"bufio"
 	"context"
 	"log"
